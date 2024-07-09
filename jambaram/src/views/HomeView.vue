@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Welcome to 잼바람.xyz</h1>
+      <img src="../assets/칼바람.jpg" class="HomeImg">
     </div>
   </template>
   
@@ -10,3 +10,8 @@
   }
   </script>
   
+  <style>
+  .HomeImg{
+    width: 100%;
+  }
+  </style>
