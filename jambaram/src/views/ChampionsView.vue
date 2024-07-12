@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h1>Champions</h1>
     <div class="selected-champions">
       <div v-for="(champion, index) in selectedChampions" :key="index" class="circle" @click="removeChampion(index)">
-        <img v-if="champion" :src="`http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
+        <img v-if="champion" :src="`http://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
       </div>
     </div>
     <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
@@ -13,7 +12,7 @@
            class="champion" 
            :class="{ selected: isSelected(champion) }"
            @click="toggleChampion(champion)">
-        <img :src="`http://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
+        <img :src="`http://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
       </div>
     </div>
   </div>
@@ -71,7 +70,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json');
+      const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json');
       this.champions = Object.values(response.data.data);
     } catch (error) {
       console.error('Failed to load champion data:', error);
