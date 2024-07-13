@@ -43,12 +43,12 @@ export default {
     circleStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 100;
-      if (selectedCount >= 15) baseSize = 40;
-      else if (selectedCount >= 14) baseSize = 50;
-      else if (selectedCount >= 13) baseSize = 60;
-      else if (selectedCount >= 12) baseSize = 70;
-      else if (selectedCount >= 11) baseSize = 80;
-      else if (selectedCount >= 10) baseSize = 90;
+      if (selectedCount >= 15) baseSize = 55;
+      else if (selectedCount >= 14) baseSize = 61;
+      else if (selectedCount >= 13) baseSize = 67;
+      else if (selectedCount >= 12) baseSize = 73;
+      else if (selectedCount >= 11) baseSize = 79;
+      else if (selectedCount >= 10) baseSize = 85;
 
       return {
         width: `${baseSize}px`,
@@ -59,12 +59,12 @@ export default {
     imgStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 100;
-      if (selectedCount >= 15) baseSize = 40;
-      else if (selectedCount >= 14) baseSize = 50;
-      else if (selectedCount >= 13) baseSize = 60;
-      else if (selectedCount >= 12) baseSize = 70;
-      else if (selectedCount >= 11) baseSize = 80;
-      else if (selectedCount >= 10) baseSize = 90;
+      if (selectedCount >= 15) baseSize = 55;
+      else if (selectedCount >= 14) baseSize = 61;
+      else if (selectedCount >= 13) baseSize = 67;
+      else if (selectedCount >= 12) baseSize = 73;
+      else if (selectedCount >= 11) baseSize = 79;
+      else if (selectedCount >= 10) baseSize = 85;
 
       return {
         width: `${baseSize}px`,
