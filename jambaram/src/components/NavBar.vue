@@ -1,8 +1,24 @@
 <template>
+  <div class="top-ad">
+    <img src="../assets/광고예시.png" height=100%>
+  </div>
   <nav class="navbar">
-    <router-link to="/" class="nav-item" exact-active-class="active">Home</router-link>
-    <router-link to="/champions" class="nav-item" exact-active-class="active">Champions</router-link>
-    <router-link to="/about" class="nav-item" exact-active-class="active">About</router-link>
+    <div class="navbar-left">
+      <div class="dropdown">
+        <button class="dropdown-toggle">
+          <img src="../assets/logo.png" alt="Logo">
+          <span>JAMBARAM.XYZ</span>
+        </button>
+      </div>
+    </div>
+    <div class="navbar-middle">
+      <router-link to="/" class="nav-item" exact-active-class="active">홈</router-link>
+      <router-link to="/champions" class="nav-item" exact-active-class="active">챔피언</router-link>
+      <router-link to="/about" class="nav-item" exact-active-class="active">?</router-link>
+    </div>
+    <div class="navbar-right">
+      <span class="nav-item">마이페이지</span>
+    </div>
   </nav>
 </template>
 
@@ -13,38 +29,77 @@ export default {
 </script>
 
 <style scoped>
+
+.top-ad {
+  background-color: transparent;
+  height: 100px;
+  width: 100vw;
+}
+
 .navbar {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #2C2F33;
+  justify-content: space-between;
+  grid-template-columns: 200px 1fr 100px;
   align-items: center;
-  background-color: #34495e;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  width: calc(100% - 300px); /* Adjust width to exclude ad space */
-  left: 150px; /* Position it correctly considering left ad */
-  top: 0;
-  z-index: 1000;
+  padding: 0px 15px;
+}
+
+.navbar-left, .navbar-middle, .navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-left .nav-logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
 }
 
 .nav-item {
+  width: 50px;
   color: white;
-  padding: 10px 20px;
+  margin: 0 5px;
+  padding: 10px;
   text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  text-transform: uppercase;
+  font-size: 14px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .nav-item:hover {
-  background-color: #1abc9c;
+  background-color: #23272A;
   color: white;
 }
 
 .active {
-  background-color: #e74c3c;
+  background-color: #7289DA;
   color: white;
-  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
+}
+
+.active:hover {
+  background-color: #7289DA;
+  color: white;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 14px;
+}
+
+.dropdown-toggle img {
+  height: 20px;
+  margin-right: 5px;
 }
 </style>

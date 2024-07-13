@@ -1,8 +1,8 @@
 <template>
   <div class="home-container">
-    <img src="../assets/칼바람.jpg" class="home-img">
+    <img src="../assets/칼바람.jpg" class="home-img" alt="사진">
     <div class="search-bar-container">
-      <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="소환사 이름 검색" class="search-bar">
+      <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="플레이어+태그 전적검색" class="search-bar">
       <button @click="searchSummoner" class="search-button">검색</button>
     </div>
   </div>

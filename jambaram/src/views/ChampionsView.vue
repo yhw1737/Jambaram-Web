@@ -2,7 +2,7 @@
   <div>
     <div class="selected-champions">
       <div v-for="(champion, index) in selectedChampions" :key="index" class="circle" @click="removeChampion(index)">
-        <img v-if="champion" :src="`http://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
+        <img v-if="champion" :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
       </div>
     </div>
     <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
@@ -12,7 +12,7 @@
            class="champion" 
            :class="{ selected: isSelected(champion) }"
            @click="toggleChampion(champion)">
-        <img :src="`http://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
+        <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
       </div>
     </div>
   </div>
@@ -25,6 +25,7 @@ export default {
   name: 'ChampionsView',
   data() {
     return {
+      gameversion: "14.13.1",
       searchQuery: '',
       champions: [],
       selectedChampions: Array(5).fill(null), // 빈 동그라미 5개
@@ -34,7 +35,8 @@ export default {
   computed: {
     filteredChampions() {
       return this.champions.filter(champion => 
-        champion.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        champion.englishName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        champion.koreanName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
   },
@@ -64,14 +66,24 @@ export default {
       this.sortSelectedChampions();
     },
     sortSelectedChampions() {
-      const sorted = this.selectedChampions.filter(c => c !== null).sort((a, b) => a.name.localeCompare(b.name));
+      const sorted = this.selectedChampions.filter(c => c !== null).sort((a, b) => a.koreanName.localeCompare(b.koreanName));
       this.selectedChampions = [...sorted, ...Array(5 - sorted.length).fill(null)];
     }
   },
   async mounted() {
     try {
-      const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json');
-      this.champions = Object.values(response.data.data);
+      const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.13.1/data/ko_KR/champion.json');
+      const koreanData = response.data.data;
+
+      const englishResponse = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json');
+      const englishData = englishResponse.data.data;
+
+      this.champions = Object.values(koreanData).map(champion => ({
+        ...champion,
+        koreanName: champion.name,
+        englishName: englishData[champion.id].name // 영어 이름 추가
+      }));
+      this.champions.sort((a, b) => a.koreanName.localeCompare(b.koreanName)); // 한국어 이름으로 정렬
     } catch (error) {
       console.error('Failed to load champion data:', error);
     } finally {
