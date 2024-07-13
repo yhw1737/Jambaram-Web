@@ -1,25 +1,24 @@
 <template>
-  <div class="top-ad">
-    <img src="../assets/광고예시.png" height=100%>
-  </div>
-  <nav class="navbar">
-    <div class="navbar-left">
-      <div class="dropdown">
-        <button class="dropdown-toggle">
-          <img src="../assets/logo.png" alt="Logo">
-          <span>JAMBARAM.XYZ</span>
-        </button>
+  <div>
+    <nav class="navbar-top">
+      <div class="navbar-left">
+        <div class="dropdown">
+          <button class="dropdown-toggle">
+            <img src="../assets/logo.png" alt="Logo">
+            <span>JAMBARAM.XYZ</span>
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="navbar-middle">
+      <div class="navbar-right">
+        <span class="nav-item">마이페이지</span>
+      </div>
+    </nav>
+    <nav class="navbar-bottom">
       <router-link to="/" class="nav-item" exact-active-class="active">홈</router-link>
       <router-link to="/champions" class="nav-item" exact-active-class="active">챔피언</router-link>
       <router-link to="/about" class="nav-item" exact-active-class="active">?</router-link>
-    </div>
-    <div class="navbar-right">
-      <span class="nav-item">마이페이지</span>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -29,41 +28,40 @@ export default {
 </script>
 
 <style scoped>
-
-.top-ad {
-  background-color: transparent;
-  height: 100px;
-  width: 100vw;
-}
-
-.navbar {
-  display: grid;
+.navbar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   box-sizing: border-box;
-  background-color: #2C2F33;
-  justify-content: space-between;
-  grid-template-columns: 200px 1fr 100px;
-  align-items: center;
-  padding: 0px 15px;
+  background-color: #1A1D21;
+  padding: 10px 15px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
-.navbar-left, .navbar-middle, .navbar-right {
+.navbar-bottom {
+  display: flex;
+  justify-content: flex-start;
+  background-color: #2C2F33;
+  padding: 10px 100px;
+  position: fixed;
+  top: 50px;
+  width: 100%;
+  z-index: 999;
+}
+
+.navbar-left, .navbar-right {
   display: flex;
   align-items: center;
 }
 
-.navbar-left .nav-logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
-  margin-right: 20px;
-}
-
 .nav-item {
-  width: 50px;
   color: white;
-  margin: 0 5px;
+  margin: 0 10px;
   padding: 10px;
   text-decoration: none;
   font-size: 14px;
