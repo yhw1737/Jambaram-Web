@@ -15,6 +15,18 @@
         <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
       </div>
     </div>
+    <button @click="submitChampions" class="submit-button">최적의 조합 찾기</button>
+    <div v-if="optimalCombination.length > 0" class="optimal-combination">
+      <h3>최적의 조합</h3>
+      <div class="champion-list">
+        <div v-for="(champion, index) in optimalCombination" 
+             :key="index" 
+             class="champion">
+          <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
+          <div class="champion-name">{{ champion.koreanName }}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,6 +41,7 @@ export default {
       searchQuery: '',
       champions: [],
       selectedChampions: [],
+      optimalCombination: [],
       loading: true,
       containerWidth: 0,
     };
@@ -96,6 +109,16 @@ export default {
     updateContainerWidth() {
       if (this.$refs.selectedChampionsContainer) {
         this.containerWidth = this.$refs.selectedChampionsContainer.clientWidth;
+      }
+    },
+    async submitChampions() {
+      try {
+        const response = await axios.post('http://yourserver.com/api/optimal-combination', {
+          champions: this.selectedChampions
+        });
+        this.optimalCombination = response.data;
+      } catch (error) {
+        console.error('Failed to fetch optimal combination:', error);
       }
     }
   },
@@ -192,5 +215,32 @@ export default {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.submit-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: darkslateblue;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.optimal-combination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.optimal-combination h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.optimal-combination .champion-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 </style>
