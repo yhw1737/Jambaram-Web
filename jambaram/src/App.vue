@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <NavBar />
-    <div class="main-content">
-      <router-view></router-view>
+    <div class="background-image">
+      <router-view />
     </div>
   </div>
 </template>
@@ -19,7 +19,6 @@ export default {
 </script>
 
 <style>
-
 #app {
   font-family: '나눔스퀘어 NEO OTF Regular', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -27,16 +26,30 @@ export default {
   text-align: center;
   color: #2c3e50;
   position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 body {
   margin: 0;
+  background: black; /* Set background to black */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('./assets/칼바람.jpg') no-repeat center center;
+  background-size: cover;
+  z-index: -1;
 }
 
 .main-content {
-  margin-top: 100px;
-  margin-left: 160px;
-  margin-right: 160px;
+  position: relative;
+  margin-top: 80px; /* Adjust for NavBar height */
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
