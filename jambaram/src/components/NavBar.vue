@@ -2,7 +2,7 @@
   <div class="navbar">
     <div class="navbar-left">
       <img src="../assets/logo.png" alt="로고" class="logo" />
-      <span class="site-name">jambaram.xyz</span>
+      <span class="site-name">JAMBARAM</span>
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
         <router-link to="/champions" class="menu-item">조합</router-link>
@@ -17,11 +17,17 @@
 export default {
   name: 'NavBar',
   mounted() {
-    const navbar = document.querySelector('.navbar');
-    navbar.addEventListener('mousemove', (e) => {
-      const rect = navbar.getBoundingClientRect();
-      navbar.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-      navbar.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+      item.addEventListener('mousemove', (e) => {
+        const rect = item.getBoundingClientRect();
+        item.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        item.style.setProperty('--mouse-y', `${rect.height}px`);
+        item.classList.add('hovering'); // Add hovering class
+      });
+      item.addEventListener('mouseleave', () => {
+        item.classList.remove('hovering'); // Remove hovering class on mouse leave
+      });
     });
   }
 }
@@ -34,7 +40,7 @@ export default {
   left: 0;
   right: 0;
   height: 80px; /* Adjusted height */
-  background: linear-gradient(to bottom, black, transparent);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -75,7 +81,8 @@ export default {
   text-decoration: none;
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 80px; /* Set height to 80px */
+  overflow: hidden; /* Ensure gradient doesn't overflow */
 }
 
 .menu-item:hover,
@@ -89,17 +96,36 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  height: 80px; /* Make gradient much larger vertically */
-  padding: 0 15px;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0)); /* Gradient from bottom to top */
+  height: 80px; /* Maintain gradient height */
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0)); /* Gradient from bottom to top */
   opacity: 0;
   transition: opacity 0.3s;
   z-index: -1; /* Ensure it is behind the navbar background */
 }
 
+.menu-item.hovering::before,
 .menu-item:hover::before,
 .menu-item:focus::before,
 .menu-item.router-link-active::before {
+  opacity: 1;
+}
+
+.menu-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* Ensure gradient matches the height */
+  pointer-events: none;
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(200, 190, 180, 0.3), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s, background 0.3s;
+}
+
+.menu-item.hovering::after,
+.menu-item:hover::after,
+.menu-item:focus::after {
   opacity: 1;
 }
 
@@ -110,22 +136,5 @@ export default {
   right: 0;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.2); /* White separator */
-}
-
-.navbar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.3), transparent 50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.navbar:hover::after {
-  opacity: 1;
 }
 </style>

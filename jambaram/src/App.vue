@@ -23,8 +23,24 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family:'NanumBarunGothic';
+  src: url('./assets/fonts/NanumBarunGothic.ttf') format('truetype');
+  font-weight: 400;
+}
+@font-face {
+  font-family:'NanumBarunGothic';
+  src: url('./assets/fonts/NanumBarunGothicLight.ttf') format('truetype');
+  font-weight: 300;
+}
+@font-face {
+  font-family:'NanumBarunGothic';
+  src: url('./assets/fonts/NanumBarunGothicBold.ttf') format('truetype');
+  font-weight: 700;
+}
+
 #app {
-  font-family: '나눔스퀘어 NEO OTF Regular', Helvetica, Arial, sans-serif;
+  font-family: 'NanumBarunGothic', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
