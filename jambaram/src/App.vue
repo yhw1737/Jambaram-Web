@@ -1,19 +1,23 @@
 <template>
   <div id="app">
     <NavBar />
-    <div class="background-image">
-      <router-view />
+    <div class="background-image"></div>
+    <div class="main-content">
+      <router-view></router-view>
     </div>
+    <AppFooter />
   </div>
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue';
+import AppFooter from './components/AppFooter.vue';
 
 export default {
   name: 'App',
   components: {
-    NavBar
+    NavBar,
+    AppFooter
   }
 }
 </script>
@@ -28,16 +32,14 @@ export default {
   position: relative;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
 }
 
 body {
   margin: 0;
-  background: black; /* Set background to black */
 }
 
 .background-image {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -49,7 +51,7 @@ body {
 
 .main-content {
   position: relative;
-  margin-top: 80px; /* Adjust for NavBar height */
+  margin-top: 80px; /* Adjust if NavBar height changes */
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;

@@ -15,7 +15,15 @@
 
 <script>
 export default {
-  name: 'NavBar'
+  name: 'NavBar',
+  mounted() {
+    const navbar = document.querySelector('.navbar');
+    navbar.addEventListener('mousemove', (e) => {
+      const rect = navbar.getBoundingClientRect();
+      navbar.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+      navbar.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    });
+  }
 }
 </script>
 
@@ -102,5 +110,22 @@ export default {
   right: 0;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.2); /* White separator */
+}
+
+.navbar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.3), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.navbar:hover::after {
+  opacity: 1;
 }
 </style>

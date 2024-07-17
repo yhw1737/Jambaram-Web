@@ -1,6 +1,5 @@
 <template>
   <div class="home-container">
-    <img src="../assets/칼바람.jpg" class="home-img" alt="사진">
     <div class="search-bar-container">
       <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="플레이어+태그 전적검색" class="search-bar">
       <button @click="searchSummoner" class="search-button">검색</button>
@@ -76,23 +75,16 @@ export default {
 .home-container {
   position: relative;
   width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.home-img {
-  width: 100%;
-  height: auto;
-  max-height: 400px; /* 세로 길이를 제한하여 가로로 넓게 보이도록 설정 */
-  object-fit: cover;
+  justify-content: flex-start;
+  padding-top: 100px; /* 메뉴바 높이만큼 패딩 추가 */
 }
 
 .search-bar-container {
-  position: absolute;
-  top: 200px;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin-top: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,9 +110,10 @@ export default {
   width: 100%;
   max-width: 1200px;
   padding: 20px;
-  background-color: #f0f0f0;
+  background-color: rgba(240, 240, 240, 0.9); /* 투명 배경색 */
   margin-top: 20px;
   text-align: center;
+  border-radius: 10px; /* 모서리 둥글게 */
 }
 
 .champion-tier-container h2 {
