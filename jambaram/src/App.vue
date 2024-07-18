@@ -23,6 +23,17 @@ export default {
 </script>
 
 <style>
+#app {
+  font-family: 'NanumBarunGothic', Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
 @font-face {
   font-family:'NanumBarunGothic';
   src: url('./assets/fonts/NanumBarunGothic.ttf') format('truetype');
@@ -39,17 +50,6 @@ export default {
   font-weight: 700;
 }
 
-#app {
-  font-family: 'NanumBarunGothic', Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  position: relative;
-  height: 100vh;
-  width: 100vw;
-}
-
 body {
   margin: 0;
 }
@@ -60,7 +60,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('./assets/칼바람.jpg') no-repeat center center;
+  /* background: url('./assets/칼바람.jpg') no-repeat center center; */
+  background-color: #11151C;
   background-size: cover;
   z-index: -1;
 }

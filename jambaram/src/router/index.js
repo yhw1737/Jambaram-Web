@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
-import ChampionsView from '../views/ChampionsView.vue';
-import AboutView from '../views/AboutView.vue';
+import CombineView from '../views/CombineView.vue';
+//import ChampionsView from '../views/ChampionsView.vue';
+//import ItemsView from '../views/ItemsView.vue';
 
 const routes = [
   {
@@ -10,15 +11,20 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/champions',
-    name: 'Champions',
-    component: ChampionsView
+    path: '/combine',
+    name: 'Combinations',
+    component: CombineView
   },
-  {
-    path: '/about',
-    name: 'About',
-    component: AboutView
-  }
+  // {
+  //   path: '/champions',
+  //   name: 'Champions',
+  //   component: ChampionsView
+  // },
+  // {
+  //   path: '/items',
+  //   name: 'Items',
+  //   component: ItemsView
+  // }
 ];
 
 const router = createRouter({

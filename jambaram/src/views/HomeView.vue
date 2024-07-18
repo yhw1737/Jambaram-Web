@@ -2,18 +2,13 @@
   <div class="home-container">
     <div class="search-bar-container">
       <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="플레이어+태그 전적검색" class="search-bar">
-      <button @click="searchSummoner" class="search-button">검색</button>
+      <img src="../assets/search.png" alt="search icon" class="search-icon">
     </div>
-    <div class="champion-tier-container">
-      <h2>v{{ gameversion }} 칼바람나락 티어</h2>
-      <div class="champion-tier-list">
-        <div v-for="(champion, index) in championTiers" :key="index" class="champion-tier-item">
-          <div class="champion-icon-container">
-            <img src="../assets/empty-champion.png" alt="empty champion" class="champion-img">
-            <span class="tier-badge">{{ champion.tier }}</span>
-          </div>
-          <div class="champion-name">{{ champion.name }}</div>
-        </div>
+    <div class="patch-notes-container" v-if="patchNotes">
+      <h2>최신 패치 노트</h2>
+      <div v-for="(note, index) in patchNotes" :key="index" class="patch-note-item">
+        <h3>{{ note.title }}</h3>
+        <p>{{ note.content }}</p>
       </div>
     </div>
   </div>
@@ -27,25 +22,7 @@ export default {
   data() {
     return {
       summonerName: '',
-      gameversion: '14.13.1', // 예시 버전
-      championTiers: [
-        { name: '이즈리얼', tier: 1 },
-        { name: '진', tier: 1 },
-        { name: '케이틀린', tier: 1 },
-        { name: '징크스', tier: 1 },
-        { name: '쓰레쉬', tier: 1 },
-        { name: '제라스', tier: 1 },
-        { name: '럭스', tier: 1 },
-        { name: '니달리', tier: 1 },
-        { name: '모르가나', tier: 1 },
-        { name: '제리', tier: 1 },
-        { name: '룰루', tier: 1 },
-        { name: '블리츠크랭크', tier: 1 },
-        { name: '베이가', tier: 1 },
-        { name: '판테온', tier: 1 },
-        { name: '아리', tier: 1 },
-        { name: '브랜드', tier: 1 }
-      ]
+      patchNotes: null,
     };
   },
   methods: {
@@ -55,18 +32,21 @@ export default {
         // 실제 검색 기능 구현
       }
     },
-    async fetchChampionTiers() {
+    async fetchPatchNotes() {
       try {
-        // 챔피언 티어 데이터를 가져오는 API 호출
-        const response = await axios.get('https://api.example.com/champion-tiers'); // 실제 API 주소로 대체
-        this.championTiers = response.data;
+        const response = await axios.get('https://kr.api.riotgames.com/lol/status/v4/platform-data', {
+          headers: {
+            'X-Riot-Token': 'YOUR_API_KEY' // 여기에 라이엇 API 키를 넣으세요
+          }
+        });
+        this.patchNotes = response.data.status.maintenances; // 예시 데이터 구조, 실제 데이터 구조에 맞게 수정 필요
       } catch (error) {
-        console.error('Failed to fetch champion tiers:', error);
+        console.error('Failed to fetch patch notes:', error);
       }
     }
   },
   async mounted() {
-    await this.fetchChampionTiers();
+    await this.fetchPatchNotes();
   }
 }
 </script>
@@ -84,88 +64,52 @@ export default {
 }
 
 .search-bar-container {
-  margin-top: 200px;
+  position: absolute;
+  top: 20px;
+  right: 300px;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
 .search-bar {
-  width: 300px;
+  width: 200px;
   padding: 10px;
   font-size: 16px;
+  border-radius: 20px; /* 둥근 모서리 추가 */
+  background-color: #e0e0e0; /* 약간 어둡게 */
+  border: none; /* 테두리 제거 */
 }
 
-.search-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: darkslateblue;
-  color: white;
-  border: none;
+.search-bar:focus {
+  outline: none; /* 포커스 시 외곽선 제거 */
+}
+
+.search-icon {
+  width: 11px;
+  height: 10px;
+  margin-left: -25px; /* 검색창 오른쪽에 배치 */
   cursor: pointer;
-  margin-left: 10px;
 }
 
-.champion-tier-container {
+.patch-notes-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 800px;
+  margin-top: 50px;
+  background: #f9f9f9;
   padding: 20px;
-  background-color: rgba(240, 240, 240, 0.9); /* 투명 배경색 */
-  margin-top: 20px;
-  text-align: center;
-  border-radius: 10px; /* 모서리 둥글게 */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.champion-tier-container h2 {
-  font-size: 24px;
+.patch-note-item {
   margin-bottom: 20px;
 }
 
-.champion-tier-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.patch-note-item h3 {
+  margin: 0 0 10px 0;
 }
 
-.champion-tier-item {
-  width: 80px;
-  margin: 10px;
-  text-align: center;
-  position: relative;
-}
-
-.champion-icon-container {
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-
-.champion-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: #f0f0f0;
-}
-
-.tier-badge {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.champion-name {
-  margin-top: 10px;
-  font-size: 14px;
+.patch-note-item p {
+  margin: 0;
 }
 </style>

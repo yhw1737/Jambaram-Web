@@ -56,12 +56,7 @@ export default {
     circleStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 100;
-      if (selectedCount >= 15) baseSize = 55;
-      else if (selectedCount >= 14) baseSize = 61;
-      else if (selectedCount >= 13) baseSize = 67;
-      else if (selectedCount >= 12) baseSize = 73;
-      else if (selectedCount >= 11) baseSize = 79;
-      else if (selectedCount >= 10) baseSize = 85;
+      if (selectedCount >= 10) baseSize=100-6*(selectedCount-9);
 
       return {
         width: `${baseSize}px`,
@@ -72,12 +67,7 @@ export default {
     imgStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 100;
-      if (selectedCount >= 15) baseSize = 55;
-      else if (selectedCount >= 14) baseSize = 61;
-      else if (selectedCount >= 13) baseSize = 67;
-      else if (selectedCount >= 12) baseSize = 73;
-      else if (selectedCount >= 11) baseSize = 79;
-      else if (selectedCount >= 10) baseSize = 85;
+      if (selectedCount >= 10) baseSize=100-6*(selectedCount-9);
 
       return {
         width: `${baseSize}px`,
@@ -96,7 +86,7 @@ export default {
         this.removeChampion(index);
       } else {
         // 선택되지 않은 챔피언이면 선택
-        if (this.selectedChampions.length < 15) {
+        if (this.selectedChampions.length < 12) {
           this.selectedChampions.push(champion);
         } else {
           alert('모든 슬롯이 가득 찼습니다.');
@@ -113,7 +103,7 @@ export default {
     },
     async submitChampions() {
       try {
-        const response = await axios.post('http://yourserver.com/api/optimal-combination', {
+        const response = await axios.post('jambaram.xyz:10055/combination', {
           champions: this.selectedChampions
         });
         this.optimalCombination = response.data;
@@ -158,7 +148,7 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   margin: 20px 0;
-  min-height: 100px; /* 최소 높이 설정 */
+  min-height: 120px; /* 최소 높이 설정 */
 }
 
 .circle {
@@ -178,7 +168,7 @@ export default {
 }
 
 .search-bar {
-  width: calc(100% - 20px);
+  width: calc(100% - 500px);
   padding: 10px;
   font-size: 16px;
   margin-bottom: 20px;
@@ -199,11 +189,11 @@ export default {
 
 .champion {
   padding: 10px;
-  margin: 10px;
+  margin: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 
 .champion.selected {

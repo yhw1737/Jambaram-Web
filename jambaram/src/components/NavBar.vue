@@ -5,8 +5,9 @@
       <span class="site-name">JAMBARAM</span>
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
-        <router-link to="/champions" class="menu-item">조합</router-link>
-        <router-link to="/about" class="menu-item">개발자</router-link>
+        <router-link to="/combine" class="menu-item">조합</router-link>
+        <router-link to="/champions" class="menu-item">챔피언</router-link>
+        <router-link to="/items" class="menu-item">아이템</router-link>
       </div>
     </div>
     <div class="separator"></div>
@@ -94,10 +95,11 @@ export default {
 .menu-item::before {
   content: '';
   position: absolute;
+  top: 20px;
   left: 0;
   right: 0;
-  height: 80px; /* Maintain gradient height */
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0)); /* Gradient from bottom to top */
+  height: 60px; /* Maintain gradient height */
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0)); /* Gradient from bottom to top */
   opacity: 0;
   transition: opacity 0.3s;
   z-index: -1; /* Ensure it is behind the navbar background */
