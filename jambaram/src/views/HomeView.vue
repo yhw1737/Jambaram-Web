@@ -106,7 +106,7 @@ export default {
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-  width: 55%;
+  width: 800px;
 }
 
 .summoner-profile {
@@ -151,5 +151,14 @@ export default {
 
 .right-divider {
   right: 20%;
+}
+
+@media (max-width: 800px) {
+  .divider {
+    display: none;
+  }
+  .summoner-info-container {
+    width: 100%;
+  }
 }
 </style>

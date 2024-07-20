@@ -16,10 +16,10 @@
       </div>
     </div>
     <button @click="submitChampions" class="submit-button">최적의 조합 찾기</button>
-    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-    <div v-if="optimalCombination.champions.length > 0" class="optimal-combination">
+    <div v-if="errorMessage" ref="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div v-if="optimalCombination.champions.length > 0" ref="optimalCombination" class="optimal-combination">
       <h3>최적의 조합</h3>
-      <p>승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
+      <p class="win-prob">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
       <div class="champion-list">
         <div v-for="(championId, index) in optimalCombination.champions" :key="index" class="champion">
           <img :src="getChampionImage(championId)" alt="champion" class="circle-img">
@@ -59,8 +59,8 @@ export default {
     },
     circleStyle() {
       const selectedCount = this.selectedChampions.length;
-      let baseSize = 100;
-      if (selectedCount >= 10) baseSize = 100 - 6 * (selectedCount - 9);
+      let baseSize = 90;
+      if (selectedCount >= 10) baseSize = 90 - 6 * (selectedCount - 9);
 
       return {
         width: `${baseSize}px`,
@@ -70,8 +70,8 @@ export default {
     },
     imgStyle() {
       const selectedCount = this.selectedChampions.length;
-      let baseSize = 100;
-      if (selectedCount >= 10) baseSize = 100 - 6 * (selectedCount - 9);
+      let baseSize = 90;
+      if (selectedCount >= 10) baseSize = 90 - 6 * (selectedCount - 9);
 
       return {
         width: `${baseSize}px`,
@@ -92,6 +92,7 @@ export default {
           this.selectedChampions.push(champion);
         } else {
           this.errorMessage = '모든 슬롯이 가득 찼습니다.';
+          this.scrollToErrorMessage();
         }
       }
     },
@@ -112,13 +113,32 @@ export default {
           this.optimalCombination.champions = response.data.champions;
           this.optimalCombination.win_prob = response.data.win_prob;
           this.errorMessage = '';
+          this.scrollToOptimalCombination();
         } catch (error) {
           console.error('Failed to fetch optimal combination:', error);
           this.errorMessage = '최적의 조합을 가져오는 데 실패했습니다.';
+          this.scrollToErrorMessage();
         }
       } else {
         this.errorMessage = '최적의 조합을 찾으려면 5에서 12개의 챔피언을 선택해야 합니다.';
+        this.scrollToErrorMessage();
       }
+    },
+    scrollToOptimalCombination() {
+      this.$nextTick(() => {
+        const element = this.$refs.optimalCombination;
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    },
+    scrollToErrorMessage() {
+      this.$nextTick(() => {
+        const element = this.$refs.errorMessage;
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
     },
     getChampionImage(id) {
       const champion = this.champions.find(champion => parseInt(champion.key) === id);
@@ -166,7 +186,7 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   margin: 20px 0;
-  min-height: 120px; /* 최소 높이 설정 */
+  min-height: 100px; /* 최소 높이 설정 */
 }
 
 .circle {
@@ -239,6 +259,7 @@ export default {
 .optimal-combination {
   margin-top: 20px;
   text-align: center;
+  color: #F7F4F3; /* 조합 결과 텍스트 색상 변경 */
 }
 
 .optimal-combination h3 {
