@@ -2,7 +2,7 @@
   <div class="navbar">
     <div class="navbar-left">
       <img src="../assets/logo.png" alt="로고" class="logo" />
-      <span class="site-name">JAMBARAM</span>
+      <span class="site-name">잼바람</span>
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
         <router-link to="/combine" class="menu-item">조합</router-link>

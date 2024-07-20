@@ -16,14 +16,14 @@
       </div>
     </div>
     <button @click="submitChampions" class="submit-button">최적의 조합 찾기</button>
-    <div v-if="optimalCombination.length > 0" class="optimal-combination">
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div v-if="optimalCombination.champions.length > 0" class="optimal-combination">
       <h3>최적의 조합</h3>
+      <p>승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
       <div class="champion-list">
-        <div v-for="(champion, index) in optimalCombination" 
-             :key="index" 
-             class="champion">
-          <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
-          <div class="champion-name">{{ champion.koreanName }}</div>
+        <div v-for="(championId, index) in optimalCombination.champions" :key="index" class="champion">
+          <img :src="getChampionImage(championId)" alt="champion" class="circle-img">
+          <div class="champion-name">{{ getChampionName(championId) }}</div>
         </div>
       </div>
     </div>
@@ -34,16 +34,20 @@
 import axios from 'axios';
 
 export default {
-  name: 'ChampionsView',
+  name: 'CombineView',
   data() {
     return {
-      gameversion: "14.13.1",
+      gameversion: "14.14.1",
       searchQuery: '',
       champions: [],
       selectedChampions: [],
-      optimalCombination: [],
+      optimalCombination: {
+        champions: [],
+        win_prob: 0
+      },
       loading: true,
       containerWidth: 0,
+      errorMessage: ''
     };
   },
   computed: {
@@ -56,7 +60,7 @@ export default {
     circleStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 100;
-      if (selectedCount >= 10) baseSize=100-6*(selectedCount-9);
+      if (selectedCount >= 10) baseSize = 100 - 6 * (selectedCount - 9);
 
       return {
         width: `${baseSize}px`,
@@ -67,7 +71,7 @@ export default {
     imgStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 100;
-      if (selectedCount >= 10) baseSize=100-6*(selectedCount-9);
+      if (selectedCount >= 10) baseSize = 100 - 6 * (selectedCount - 9);
 
       return {
         width: `${baseSize}px`,
@@ -82,14 +86,12 @@ export default {
     toggleChampion(champion) {
       const index = this.selectedChampions.indexOf(champion);
       if (index !== -1) {
-        // 이미 선택된 챔피언이면 선택 취소
         this.removeChampion(index);
       } else {
-        // 선택되지 않은 챔피언이면 선택
         if (this.selectedChampions.length < 12) {
           this.selectedChampions.push(champion);
         } else {
-          alert('모든 슬롯이 가득 찼습니다.');
+          this.errorMessage = '모든 슬롯이 가득 찼습니다.';
         }
       }
     },
@@ -102,28 +104,44 @@ export default {
       }
     },
     async submitChampions() {
-      try {
-        const response = await axios.post('jambaram.xyz:10055/combination', {
-          champions: this.selectedChampions
-        });
-        this.optimalCombination = response.data;
-      } catch (error) {
-        console.error('Failed to fetch optimal combination:', error);
+      if (this.selectedChampions.length >= 5 && this.selectedChampions.length <= 12) {
+        try {
+          const response = await axios.post('http://jambaram.xyz:10055/api/combination', {
+            champion_list: this.selectedChampions.map(champion => parseInt(champion.key))
+          });
+          this.optimalCombination.champions = response.data.champions;
+          this.optimalCombination.win_prob = response.data.win_prob;
+          this.errorMessage = '';
+        } catch (error) {
+          console.error('Failed to fetch optimal combination:', error);
+          this.errorMessage = '최적의 조합을 가져오는 데 실패했습니다.';
+        }
+      } else {
+        this.errorMessage = '최적의 조합을 찾으려면 5에서 12개의 챔피언을 선택해야 합니다.';
       }
+    },
+    getChampionImage(id) {
+      const champion = this.champions.find(champion => parseInt(champion.key) === id);
+      return champion ? `http://ddragon.leagueoflegends.com/cdn/${this.gameversion}/img/champion/${champion.image.full}` : '';
+    },
+    getChampionName(id) {
+      const champion = this.champions.find(champion => parseInt(champion.key) === id);
+      return champion ? champion.koreanName : '';
     }
   },
   async mounted() {
     try {
-      const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.13.1/data/ko_KR/champion.json');
+      const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.14.1/data/ko_KR/champion.json');
       const koreanData = response.data.data;
 
-      const englishResponse = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json');
+      const englishResponse = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.14.1/data/en_US/champion.json');
       const englishData = englishResponse.data.data;
 
       this.champions = Object.values(koreanData).map(champion => ({
         ...champion,
         koreanName: champion.name,
-        englishName: englishData[champion.id].name // 영어 이름 추가
+        englishName: englishData[champion.id].name, // 영어 이름 추가
+        key: champion.key // 챔피언 ID 추가
       }));
       this.champions.sort((a, b) => a.koreanName.localeCompare(b.koreanName)); // 한국어 이름으로 정렬
 
@@ -208,11 +226,11 @@ export default {
 }
 
 .submit-button {
+  background-image: url('../assets/그림2.png') no-repeat;
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
   font-size: 16px;
-  background-color: darkslateblue;
   color: white;
   border: none;
   cursor: pointer;
@@ -232,5 +250,11 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.error-message {
+  color: red;
+  margin-top: 20px;
+  text-align: center;
 }
 </style>

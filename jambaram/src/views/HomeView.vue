@@ -1,14 +1,19 @@
 <template>
   <div class="home-container">
-    <div class="search-bar-container">
-      <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="플레이어+태그 전적검색" class="search-bar">
-      <img src="../assets/search.png" alt="search icon" class="search-icon">
-    </div>
-    <div class="patch-notes-container" v-if="patchNotes">
-      <h2>최신 패치 노트</h2>
-      <div v-for="(note, index) in patchNotes" :key="index" class="patch-note-item">
-        <h3>{{ note.title }}</h3>
-        <p>{{ note.content }}</p>
+    <div class="divider left-divider"></div>
+    <div class="divider right-divider"></div>
+    <div class="summoner-info-container">
+      <div class="summoner-profile">
+        <div class="summoner-icon-placeholder">
+          <img src="../assets/empty-champion.png" alt="소환사 아이콘" class="summoner-icon">
+        </div>
+        <div class="summoner-details-placeholder">
+          <h2>소환사를 검색하세요</h2>
+        </div>
+      </div>
+      <div class="search-bar-container">
+        <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="summoner#KR1" class="search-bar">
+        <img src="../assets/search.png" alt="search icon" class="search-icon" @click="searchSummoner">
       </div>
     </div>
   </div>
@@ -22,31 +27,34 @@ export default {
   data() {
     return {
       summonerName: '',
-      patchNotes: null,
+      summonerInfo: null,
     };
   },
   methods: {
-    searchSummoner() {
+    async searchSummoner() {
       if (this.summonerName.trim() !== '') {
-        console.log(this.summonerName);
-        // 실제 검색 기능 구현
-      }
-    },
-    async fetchPatchNotes() {
-      try {
-        const response = await axios.get('https://kr.api.riotgames.com/lol/status/v4/platform-data', {
-          headers: {
-            'X-Riot-Token': 'YOUR_API_KEY' // 여기에 라이엇 API 키를 넣으세요
-          }
-        });
-        this.patchNotes = response.data.status.maintenances; // 예시 데이터 구조, 실제 데이터 구조에 맞게 수정 필요
-      } catch (error) {
-        console.error('Failed to fetch patch notes:', error);
+        try {
+          const response = await axios.get(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${this.summonerName}`, {
+            headers: {
+              'X-Riot-Token': 'YOUR_API_KEY' // 여기에 라이엇 API 키를 넣으세요
+            }
+          });
+          this.summonerInfo = {
+            name: response.data.name,
+            summonerLevel: response.data.summonerLevel,
+            profileIconUrl: `http://ddragon.leagueoflegends.com/cdn/11.1.1/img/profileicon/${response.data.profileIconId}.png`,
+            masteryChampions: [
+              { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Aatrox.png' },
+              { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Ahri.png' },
+              { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Akali.png' }
+            ]
+          };
+        } catch (error) {
+          console.error('Failed to fetch summoner info:', error);
+          this.summonerInfo = null;
+        }
       }
     }
-  },
-  async mounted() {
-    await this.fetchPatchNotes();
   }
 }
 </script>
@@ -60,23 +68,24 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 100px; /* 메뉴바 높이만큼 패딩 추가 */
 }
 
 .search-bar-container {
   position: absolute;
   top: 20px;
-  right: 300px;
+  right: 5%;
   display: flex;
   align-items: center;
 }
 
 .search-bar {
-  width: 200px;
-  padding: 10px;
-  font-size: 16px;
+  width: 100%;
+  padding: 10px 20px;
+  font-family: 'NanumBarunGothic';
+  font-size: 12px;
+  font-weight: lighter;
   border-radius: 20px; /* 둥근 모서리 추가 */
-  background-color: #e0e0e0; /* 약간 어둡게 */
+  background-color: #F7F4F3; 
   border: none; /* 테두리 제거 */
 }
 
@@ -87,29 +96,60 @@ export default {
 .search-icon {
   width: 11px;
   height: 10px;
-  margin-left: -25px; /* 검색창 오른쪽에 배치 */
+  margin-left: -30px; /* 검색창 오른쪽에 배치 */  
   cursor: pointer;
 }
 
-.patch-notes-container {
-  width: 100%;
-  max-width: 800px;
-  margin-top: 50px;
-  background: #f9f9f9;
+.summoner-info-container {
+  position: absolute;
+  background: #364156;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 55%;
 }
 
-.patch-note-item {
-  margin-bottom: 20px;
+.summoner-profile {
+  display: flex;
+  align-items: center;
 }
 
-.patch-note-item h3 {
-  margin: 0 0 10px 0;
+.summoner-icon-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  margin-right: 20px;
 }
 
-.patch-note-item p {
+.summoner-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.summoner-details-placeholder h2 {
   margin: 0;
+  color: #999;
+}
+
+.divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #e0e0e0;
+  opacity: 0.25;
+}
+
+.left-divider {
+  left: 20%;
+}
+
+.right-divider {
+  right: 20%;
 }
 </style>
