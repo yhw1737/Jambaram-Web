@@ -226,11 +226,11 @@ export default {
 }
 
 .submit-button {
-  background-image: url('../assets/그림2.png') no-repeat;
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
   font-size: 16px;
+  background-color: darkslateblue;
   color: white;
   border: none;
   cursor: pointer;

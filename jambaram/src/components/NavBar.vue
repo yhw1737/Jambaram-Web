@@ -1,8 +1,10 @@
 <template>
   <div class="navbar">
     <div class="navbar-left">
-      <img src="../assets/logo.png" alt="로고" class="logo" />
-      <span class="site-name">잼바람</span>
+      <router-link to="/" class="logo-link">
+        <img src="../assets/logo.png" alt="로고" class="logo" />
+        <span class="site-name">잼바람</span>
+      </router-link>
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
         <router-link to="/combine" class="menu-item">조합</router-link>
@@ -55,9 +57,15 @@ export default {
   align-items: center;
 }
 
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .logo {
   height: 60px;
-  margin-right: 10px;
+  margin-right: 10px; 
 }
 
 .site-name {

@@ -31,7 +31,7 @@ export default {
   color: #2c3e50;
   position: relative;
   height: 100vh;
-  width: 100vw;
+  width: cal(100%-20px);
 }
 
 @font-face {
@@ -55,12 +55,12 @@ body {
 }
 
 .background-image {
+  box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  /* background: url('./assets/칼바람.jpg') no-repeat center center; */
   background-color: #11151C;
   background-size: cover;
   z-index: -1;
@@ -68,7 +68,8 @@ body {
 
 .main-content {
   position: relative;
-  margin-top: 80px; /* Adjust if NavBar height changes */
+  margin-top: 80px;
+  box-sizing: border-box;
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
