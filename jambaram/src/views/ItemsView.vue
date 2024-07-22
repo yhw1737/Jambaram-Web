@@ -1,8 +1,6 @@
 <template>
+  <input type="text" v-model="searchQuery" placeholder="아이템 검색" class="search-bar">
   <div class="items-container">
-    <div class="search-bar-container">
-      <input type="text" v-model="searchQuery" placeholder="아이템 검색" class="search-bar">
-    </div>
     <div class="item-list">
       <div v-for="item in filteredItems" :key="item.id" class="item" @mouseover="showTooltip(item, $event)" @mouseleave="hideTooltip">
         <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/item/${item.image.full}`" :alt="item.name" />
@@ -72,16 +70,13 @@ export default {
   text-align: center;
 }
 
-.search-bar-container {
-  margin-bottom: 20px;
-}
-
 .search-bar {
-  width: 300px;
+  width: 50%;
   padding: 10px;
   font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .item-list {

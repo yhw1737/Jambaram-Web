@@ -1,8 +1,6 @@
 <template>
+  <input type="text" v-model="searchQuery" placeholder="룬 검색" class="search-bar">
   <div class="runes-container">
-    <div class="search-bar-container">
-      <input type="text" v-model="searchQuery" placeholder="룬 검색" class="search-bar">
-    </div>
     <div class="rune-list">
       <div v-for="rune in filteredRunes" :key="rune.id" class="rune" @mouseover="showTooltip(rune, $event)" @mouseleave="hideTooltip">
         <img :src="`http://ddragon.leagueoflegends.com/cdn/img/${rune.icon}`" :alt="rune.name" />
@@ -71,16 +69,13 @@ export default {
   text-align: center;
 }
 
-.search-bar-container {
-  margin-bottom: 20px;
-}
-
 .search-bar {
-  width: 300px;
+  width: 50%;
   padding: 10px;
   font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .rune-list {

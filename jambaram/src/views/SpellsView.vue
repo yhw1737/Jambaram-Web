@@ -1,8 +1,6 @@
 <template>
+  <input type="text" v-model="searchQuery" placeholder="스펠 검색" class="search-bar">
   <div class="spells-container">
-    <div class="search-bar-container">
-      <input type="text" v-model="searchQuery" placeholder="스펠 검색" class="search-bar">
-    </div>
     <div class="spell-list">
       <div v-for="spell in filteredSpells" :key="spell.id" class="spell" @mouseover="showTooltip(spell, $event)" @mouseleave="hideTooltip">
         <img :src="`http://ddragon.leagueoflegends.com/cdn/14.14.1/img/spell/${spell.image.full}`" :alt="spell.name" />
@@ -71,16 +69,13 @@ export default {
   text-align: center;
 }
 
-.search-bar-container {
-  margin-bottom: 20px;
-}
-
 .search-bar {
-  width: 300px;
+  width: 50%;
   padding: 10px;
   font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .spell-list {
