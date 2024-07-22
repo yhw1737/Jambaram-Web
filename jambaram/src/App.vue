@@ -2,6 +2,8 @@
   <div id="app">
     <NavBar />
     <div class="background-image"></div>
+    <div class="divider left-divider"></div>
+    <div class="divider right-divider"></div>
     <div class="main-content">
       <router-view></router-view>
     </div>
@@ -23,6 +25,7 @@ export default {
 </script>
 
 <style>
+
 #app {
   font-family: 'NanumBarunGothic', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -30,28 +33,55 @@ export default {
   text-align: center;
   color: #2c3e50;
   position: relative;
-  height: 100vh;
-  width: cal(100%-20px);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  position: absolute;
+  top: 60px;
+  bottom: 200px;
+  width: 1px;
+  background-color: #e0e0e0;
+  opacity: 0.05;
+}
+
+.left-divider {
+  left: 20%;
+}
+
+.right-divider {
+  right: 20%;
+}
+
+@media (max-width: 1500px) {
+  .divider {
+    display: none;
+  }
 }
 
 @font-face {
-  font-family:'NanumBarunGothic';
+  font-family: 'NanumBarunGothic';
   src: url('./assets/fonts/NanumBarunGothic.ttf') format('truetype');
   font-weight: 400;
 }
 @font-face {
-  font-family:'NanumBarunGothic';
+  font-family: 'NanumBarunGothic';
   src: url('./assets/fonts/NanumBarunGothicLight.ttf') format('truetype');
   font-weight: 300;
 }
 @font-face {
-  font-family:'NanumBarunGothic';
+  font-family: 'NanumBarunGothic';
   src: url('./assets/fonts/NanumBarunGothicBold.ttf') format('truetype');
   font-weight: 700;
 }
 
 body {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .background-image {
@@ -67,6 +97,8 @@ body {
 }
 
 .main-content {
+  left: 20%;
+  width: 60%;
   position: relative;
   box-sizing: border-box;
   padding: 20px;

@@ -1,6 +1,5 @@
 <template>
   <div class="runes-container">
-    <h1>룬 정보</h1>
     <div class="search-bar-container">
       <input type="text" v-model="searchQuery" placeholder="룬 검색" class="search-bar">
     </div>

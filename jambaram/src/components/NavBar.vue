@@ -20,21 +20,7 @@
 <script>
 export default {
   name: 'NavBar',
-  mounted() {
-    const menuItems = document.querySelectorAll('.menu-item');
-    menuItems.forEach(item => {
-      item.addEventListener('mousemove', (e) => {
-        const rect = item.getBoundingClientRect();
-        item.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        item.style.setProperty('--mouse-y', `${rect.height}px`);
-        item.classList.add('hovering'); // Add hovering class
-      });
-      item.addEventListener('mouseleave', () => {
-        item.classList.remove('hovering'); // Remove hovering class on mouse leave
-      });
-    });
-  }
-}
+};
 </script>
 
 <style>
@@ -42,7 +28,7 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  height: 80px; /* Adjusted height */
+  height: 50px; /* Adjusted height */
   background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
   display: flex;
   align-items: center;
@@ -64,13 +50,13 @@ export default {
 }
 
 .logo {
-  height: 60px;
+  height: 20px;
   margin-right: 10px; 
 }
 
 .site-name {
   color: white;
-  font-size: 24px; /* Increased font size */
+  font-size: 20px; /* Increased font size */
   font-weight: bold;
 }
 
@@ -86,57 +72,15 @@ export default {
   font-size: 18px; /* Increased font size */
   padding: 0 15px;
   cursor: pointer;
-  position: relative;
   text-decoration: none;
   display: flex;
   align-items: center;
-  height: 80px; /* Set height to 80px */
-  overflow: hidden; /* Ensure gradient doesn't overflow */
+  height: 50px; /* Set height to 50px */
 }
 
 .menu-item:hover,
 .menu-item:focus,
 .menu-item.router-link-active {
   color: white;
-}
-
-.menu-item::before {
-  content: '';
-  position: absolute;
-  top: 20px;
-  left: 0;
-  right: 0;
-  height: 60px; /* Maintain gradient height */
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0)); /* Gradient from bottom to top */
-  opacity: 0;
-  transition: opacity 0.3s;
-  z-index: -1; /* Ensure it is behind the navbar background */
-}
-
-.menu-item.hovering::before,
-.menu-item:hover::before,
-.menu-item:focus::before,
-.menu-item.router-link-active::before {
-  opacity: 1;
-}
-
-.menu-item::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80px; /* Ensure gradient matches the height */
-  pointer-events: none;
-  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(200, 190, 180, 0.3), transparent 90%);
-  opacity: 0;
-  transition: opacity 0.3s, background 0.3s;
-}
-
-.menu-item.hovering::after,
-.menu-item:hover::after,
-.menu-item:focus::after,
-.menu-item.router-link-active::after {
-  opacity: 1;
 }
 </style>

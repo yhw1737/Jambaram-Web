@@ -1,7 +1,5 @@
 <template>
   <div class="home-container">
-    <div class="divider left-divider"></div>
-    <div class="divider right-divider"></div>
     <div class="summoner-info-container">
       <div class="summoner-profile">
         <div class="summoner-icon-placeholder">
@@ -106,7 +104,7 @@ export default {
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-  width: 800px;
+  width: 95%;
 }
 
 .summoner-profile {
@@ -136,29 +134,4 @@ export default {
   color: #999;
 }
 
-.divider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background-color: #e0e0e0;
-  opacity: 0.25;
-}
-
-.left-divider {
-  left: 20%;
-}
-
-.right-divider {
-  right: 20%;
-}
-
-@media (max-width: 800px) {
-  .divider {
-    display: none;
-  }
-  .summoner-info-container {
-    width: 100%;
-  }
-}
 </style>

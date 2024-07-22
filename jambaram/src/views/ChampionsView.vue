@@ -1,13 +1,15 @@
 <template>
+  <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
   <div class="champions-container">
-    <div class="search-bar-container">
-      <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
-    </div>
     <div class="champion-list">
-      <div v-for="champion in filteredChampions" :key="champion.id" class="champion">
+      <div v-for="champion in filteredChampions" :key="champion.id" class="champion" @mouseover="showTooltip(champion, $event)" @mouseleave="hideTooltip">
         <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" :alt="champion.koreanName" />
         <div>{{ champion.koreanName }}</div>
       </div>
+    </div>
+    <div v-if="tooltipChampion" class="tooltip" :style="{ top: tooltipPosition.top, left: tooltipPosition.left }">
+      <h3>{{ tooltipChampion.koreanName }}</h3>
+      <p>{{ tooltipChampion.aramStats }}</p>
     </div>
   </div>
 </template>
@@ -22,6 +24,14 @@ export default {
       gameversion: "14.14.1",
       searchQuery: '',
       champions: [],
+      tooltipChampion: null,
+      tooltipPosition: { top: '0px', left: '0px' },
+      aramStats: {
+        Aatrox: '체력 재생량 50% 증가',
+        Ahri: '마나 소모량 30% 감소',
+        // 각 챔피언에 대한 칼바람 나락 능력치 조정 내용을 추가
+        // ...
+      },
       loading: true,
     };
   },
@@ -31,6 +41,21 @@ export default {
         champion.englishName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         champion.koreanName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
+    }
+  },
+  methods: {
+    showTooltip(champion, event) {
+      this.tooltipChampion = {
+        ...champion,
+        aramStats: this.aramStats[champion.englishName] || '변경 사항 없음'
+      };
+      this.tooltipPosition = {
+        top: `${event.clientY + 10}px`,
+        left: `${event.clientX + 10}px`
+      };
+    },
+    hideTooltip() {
+      this.tooltipChampion = null;
     }
   },
   async mounted() {
@@ -58,20 +83,17 @@ export default {
 
 <style scoped>
 .champions-container {
-  padding: 50px;
+  padding: 20px;
   text-align: center;
 }
 
-.search-bar-container {
-  margin-bottom: 20px;
-}
-
 .search-bar {
-  width: 300px;
+  width: 50%;
   padding: 10px;
   font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .champion-list {
@@ -84,6 +106,7 @@ export default {
   width: 100px;
   margin: 10px;
   text-align: center;
+  position: relative;
 }
 
 .champion img {
@@ -92,8 +115,14 @@ export default {
   border-radius: 50%;
 }
 
-.champion-name {
-  margin-top: 5px;
-  font-size: 14px;
+.tooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+  max-width: 200px;
+  word-wrap: break-word;
 }
 </style>

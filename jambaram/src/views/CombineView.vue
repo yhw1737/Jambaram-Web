@@ -10,17 +10,15 @@
       <div v-for="(champion, index) in filteredChampions" 
            :key="index" 
            class="champion" 
-           :class="{ selected: isSelected(champion) }"
            @click="toggleChampion(champion)">
-        <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img">
+        <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img" :class="{ selected: isSelected(champion) }">
       </div>
     </div>
     <button @click="submitChampions" class="submit-button">최적의 조합 찾기</button>
     <div v-if="errorMessage" ref="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div v-if="optimalCombination.champions.length > 0" ref="optimalCombination" class="optimal-combination">
-      <h3>최적의 조합</h3>
-      <p class="win-prob">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
-      <div class="champion-list">
+      <p class="win-prob" :style="{ color: winProbColor }">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
+      <div class="optimal-champion-list">
         <div v-for="(championId, index) in optimalCombination.champions" :key="index" class="champion">
           <img :src="getChampionImage(championId)" alt="champion" class="circle-img">
           <div class="champion-name">{{ getChampionName(championId) }}</div>
@@ -51,6 +49,16 @@ export default {
     };
   },
   computed: {
+    winProbColor() {
+      const winProb = this.optimalCombination.win_prob * 100;
+      if (winProb <= 47.5) {
+        return '#D66853';
+      } else if (winProb >= 52.5) {
+        return '#7c96c6';
+      } else {
+        return '#F7F4F3';
+      }
+    },
     filteredChampions() {
       return this.champions.filter(champion => 
         champion.englishName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -60,7 +68,7 @@ export default {
     circleStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 90;
-      if (selectedCount >= 10) baseSize = 90 - 6 * (selectedCount - 9);
+      if (selectedCount >= 8) baseSize = 90 - 8 * (selectedCount - 7);
 
       return {
         width: `${baseSize}px`,
@@ -71,7 +79,7 @@ export default {
     imgStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 90;
-      if (selectedCount >= 10) baseSize = 90 - 6 * (selectedCount - 9);
+      if (selectedCount >= 8) baseSize = 90 - 8 * (selectedCount - 7);
 
       return {
         width: `${baseSize}px`,
@@ -205,8 +213,12 @@ export default {
   transition: width 0.3s, height 0.3s;
 }
 
+.circle-img.selected {
+  opacity: 0.6;
+}
+
 .search-bar {
-  width: calc(100% - 500px);
+  width: 50%;
   padding: 10px;
   font-size: 16px;
   margin-bottom: 20px;
@@ -221,7 +233,7 @@ export default {
   justify-content: center;
   height: 350px;
   overflow-y: scroll;
-  border: 1px solid #ccc;
+  border: 1px solid #212D40;
   padding: 10px;
 }
 
@@ -235,7 +247,7 @@ export default {
 }
 
 .champion.selected {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: transparent;
 }
 
 .champion img {
@@ -250,7 +262,7 @@ export default {
   margin: 20px auto;
   padding: 10px 20px;
   font-size: 16px;
-  background-color: darkslateblue;
+  background-color: #364156;
   color: white;
   border: none;
   cursor: pointer;
@@ -258,23 +270,19 @@ export default {
 
 .optimal-combination {
   margin-top: 20px;
+  margin-bottom: 120px;
   text-align: center;
   color: #F7F4F3; /* 조합 결과 텍스트 색상 변경 */
 }
 
-.optimal-combination h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.optimal-combination .champion-list {
+.optimal-combination .optimal-champion-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .error-message {
-  color: red;
+  color: #D66853;
   margin-top: 20px;
   text-align: center;
 }

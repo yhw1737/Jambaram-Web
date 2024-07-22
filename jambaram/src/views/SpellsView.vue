@@ -1,6 +1,5 @@
 <template>
   <div class="spells-container">
-    <h1>스펠 정보</h1>
     <div class="search-bar-container">
       <input type="text" v-model="searchQuery" placeholder="스펠 검색" class="search-bar">
     </div>
