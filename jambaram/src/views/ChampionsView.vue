@@ -1,10 +1,12 @@
 <template>
-  <div>
-    <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
+  <div class="champions-container">
+    <div class="search-bar-container">
+      <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
+    </div>
     <div class="champion-list">
-      <div v-for="(champion, index) in filteredChampions" :key="index" class="champion">
-        <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="champion-img">
-        <div class="champion-name">{{ champion.koreanName }}</div>
+      <div v-for="champion in filteredChampions" :key="champion.id" class="champion">
+        <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" :alt="champion.koreanName" />
+        <div>{{ champion.koreanName }}</div>
       </div>
     </div>
   </div>
@@ -55,14 +57,21 @@ export default {
 </script>
 
 <style scoped>
+.champions-container {
+  padding: 50px;
+  text-align: center;
+}
+
+.search-bar-container {
+  margin-bottom: 20px;
+}
+
 .search-bar {
-  width: calc(100% - 20px);
+  width: 300px;
   padding: 10px;
   font-size: 16px;
-  margin-bottom: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 .champion-list {
@@ -77,8 +86,9 @@ export default {
   text-align: center;
 }
 
-.champion-img {
-  width: 100%;
+.champion img {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
 }
 

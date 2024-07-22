@@ -68,7 +68,6 @@ body {
 
 .main-content {
   position: relative;
-  margin-top: 80px;
   box-sizing: border-box;
   padding: 20px;
   flex-grow: 1;

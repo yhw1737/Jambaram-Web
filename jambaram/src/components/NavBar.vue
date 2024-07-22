@@ -2,17 +2,18 @@
   <div class="navbar">
     <div class="navbar-left">
       <router-link to="/" class="logo-link">
-        <img src="../assets/logo.png" alt="로고" class="logo" />
+        <img src="../assets/icon03.png" alt="로고" class="logo" />
         <span class="site-name">잼바람</span>
       </router-link>
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
         <router-link to="/combine" class="menu-item">조합</router-link>
         <router-link to="/champions" class="menu-item">챔피언</router-link>
+        <router-link to="/spells" class="menu-item">스펠</router-link>
         <router-link to="/items" class="menu-item">아이템</router-link>
+        <router-link to="/runes" class="menu-item">룬</router-link>
       </div>
     </div>
-    <div class="separator"></div>
   </div>
 </template>
 
@@ -38,7 +39,6 @@ export default {
 
 <style>
 .navbar {
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -128,23 +128,15 @@ export default {
   width: 100%;
   height: 80px; /* Ensure gradient matches the height */
   pointer-events: none;
-  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(200, 190, 180, 0.3), transparent 50%);
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(200, 190, 180, 0.3), transparent 90%);
   opacity: 0;
   transition: opacity 0.3s, background 0.3s;
 }
 
 .menu-item.hovering::after,
 .menu-item:hover::after,
-.menu-item:focus::after {
+.menu-item:focus::after,
+.menu-item.router-link-active::after {
   opacity: 1;
-}
-
-.separator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: rgba(255, 255, 255, 0.2); /* White separator */
 }
 </style>

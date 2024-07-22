@@ -1,20 +1,18 @@
 <template>
   <div class="items-container">
-    <div class="left-menu">
-      <div @click="setMap('all')" :class="{ active: selectedMap === 'all' }">전체</div>
-      <div @click="setMap(11)" :class="{ active: selectedMap === 11 }">소환사의 협곡</div>
-      <div @click="setMap(12)" :class="{ active: selectedMap === 12 }">칼바람 나락</div>
-      <div @click="setMap('other')" :class="{ active: selectedMap === 'other' }">기타</div>
-    </div>
-    <div class="right-menu">
-      <div @click="setTag('all')" :class="{ active: selectedTag === 'all' }">전체</div>
-      <div v-for="tag in tags" :key="tag" @click="setTag(tag)" :class="{ active: selectedTag === tag }">{{ tag }}</div>
+    <h1>아이템 정보</h1>
+    <div class="search-bar-container">
+      <input type="text" v-model="searchQuery" placeholder="아이템 검색" class="search-bar">
     </div>
     <div class="item-list">
-      <div v-for="item in filteredItems" :key="item.id" class="item">
+      <div v-for="item in filteredItems" :key="item.id" class="item" @mouseover="showTooltip(item, $event)" @mouseleave="hideTooltip">
         <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/item/${item.image.full}`" :alt="item.name" />
         <div>{{ item.name }}</div>
       </div>
+    </div>
+    <div v-if="tooltipItem" class="tooltip" :style="{ top: tooltipPosition.top, left: tooltipPosition.left }">
+      <h3>{{ tooltipItem.name }}</h3>
+      <p v-html="tooltipItem.description"></p>
     </div>
   </div>
 </template>
@@ -28,27 +26,22 @@ export default {
     return {
       gameversion: '14.14.1',
       items: [],
-      selectedMap: 'all',
-      selectedTag: 'all',
-      tags: ['Attack', 'Defense', 'Magic', 'Movement', 'Consumable', 'Jungle', 'Vision', 'GoldPer', 'CooldownReduction', 'CriticalStrike', 'OnHit', 'Mana'],
+      searchQuery: '',
+      tooltipItem: null,
+      tooltipPosition: { top: '0px', left: '0px' }
     };
   },
   computed: {
+    aramItems() {
+      return this.items.filter(item => item.maps['12'] && item.inStore !== false);
+    },
     filteredItems() {
-      return this.items.filter(item => {
-        const mapCondition = this.selectedMap === 'all' || item.maps[this.selectedMap] || (this.selectedMap === 'other' && !item.maps[11] && !item.maps[12]);
-        const tagCondition = this.selectedTag === 'all' || item.tags.includes(this.selectedTag);
-        return mapCondition && tagCondition;
-      });
+      return this.aramItems.filter(item =>
+        item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     }
   },
   methods: {
-    setMap(map) {
-      this.selectedMap = map;
-    },
-    setTag(tag) {
-      this.selectedTag = tag;
-    },
     async fetchItems() {
       try {
         const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.14.1/data/ko_KR/item.json');
@@ -56,6 +49,16 @@ export default {
       } catch (error) {
         console.error('Failed to fetch items:', error);
       }
+    },
+    showTooltip(item, event) {
+      this.tooltipItem = item;
+      this.tooltipPosition = {
+        top: `${event.clientY + 10}px`,
+        left: `${event.clientX + 10}px`
+      };
+    },
+    hideTooltip() {
+      this.tooltipItem = null;
     }
   },
   mounted() {
@@ -66,46 +69,48 @@ export default {
 
 <style scoped>
 .items-container {
-  display: flex;
-  width: 100%;
-  height: 100vh;
+  padding: 20px;
+  text-align: center;
 }
 
-.left-menu, .right-menu {
-  display: flex;
-  flex-direction: column;
-  width: 200px;
-  background-color: #2c3e50;
-  color: white;
+.search-bar-container {
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  width: 300px;
   padding: 10px;
-}
-
-.left-menu div, .right-menu div {
-  padding: 10px;
-  cursor: pointer;
-}
-
-.left-menu div.active, .right-menu div.active {
-  background-color: #34495e;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 .item-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 20px;
-  flex-grow: 1;
-  overflow-y: scroll;
 }
 
 .item {
   width: 100px;
   margin: 10px;
   text-align: center;
+  position: relative;
 }
 
 .item img {
   width: 48px;
   height: 48px;
+}
+
+.tooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+  max-width: 200px;
+  word-wrap: break-word;
 }
 </style>
