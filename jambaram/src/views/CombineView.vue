@@ -6,12 +6,14 @@
       </div>
     </div>
     <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
-    <div class="champion-list">
-      <div v-for="(champion, index) in filteredChampions" 
-           :key="index" 
-           class="champion" 
-           @click="toggleChampion(champion)">
-        <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img" :class="{ selected: isSelected(champion) }">
+    <div class="champion-list-container">
+      <div class="champion-list">
+        <div v-for="(champion, index) in filteredChampions" 
+             :key="index" 
+             class="champion" 
+             @click="toggleChampion(champion)">
+          <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img" :class="{ selected: isSelected(champion) }">
+        </div>
       </div>
     </div>
     <button @click="submitChampions" class="submit-button">최적의 조합 찾기</button>
@@ -227,13 +229,17 @@ export default {
   margin-right: auto;
 }
 
+.champion-list-container {
+  border: 1px solid #212D40;
+  width: 100%;
+  height: 350px;
+  overflow-y: auto; /* 기본적으로 스크롤바 숨김 */
+}
+
 .champion-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  height: 350px;
-  overflow-y: scroll;
-  border: 1px solid #212D40;
   padding: 10px;
 }
 
@@ -286,4 +292,5 @@ export default {
   margin-top: 20px;
   text-align: center;
 }
+
 </style>

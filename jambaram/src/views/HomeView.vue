@@ -1,31 +1,33 @@
 <template>
   <div class="home-container">
+    <div class="search-bar-container">
+      <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="summoner#KR1" class="search-bar">
+      <img src="../assets/search.png" alt="search icon" class="search-icon" @click="searchSummoner">
+    </div>
     <div class="summoner-info-container">
       <div class="summoner-profile">
         <div class="summoner-icon-placeholder">
           <img src="../assets/empty-champion.png" alt="소환사 아이콘" class="summoner-icon">
         </div>
-        <div class="summoner-details-placeholder">
-          <h2>-------#KR1</h2>
+        <div class="summoner-details">
+          <h2>소환사이름</h2>
+          <p>태그</p>
         </div>
       </div>
-      <div class="additional-info-container">
-        <div class="win-rate-container">
-          <h3>챔피언별 승률</h3>
-          <div class="champion-win-rate" v-for="i in 3" :key="i">
-            <p>챔피언 {{ i }}</p>
+      <div class="champion-stats-container">
+        <div class="champion-stats" v-for="i in 5" :key="i">
+          <div class="champion-icon-placeholder">
+            <img src="../assets/empty-champion.png" alt="챔피언 아이콘" class="champion-icon">
           </div>
-        </div>
-        <div class="match-history-container">
-          <h3>전적</h3>
-          <div class="match-history" v-for="i in 5" :key="i">
-            <p>전적 {{ i }}</p>
+          <div class="champion-details">
+            <p>칼바람 나락 승률 {{ i }}등 챔피언</p>
           </div>
         </div>
       </div>
-      <div class="search-bar-container">
-        <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="summoner#KR1" class="search-bar">
-        <img src="../assets/search.png" alt="search icon" class="search-icon" @click="searchSummoner">
+    </div>
+    <div class="match-history-container">
+      <div class="match-history" v-for="i in 2" :key="i">
+        <p>전적 {{ i }}</p>
       </div>
     </div>
   </div>
@@ -83,22 +85,19 @@ export default {
 }
 
 .search-bar-container {
-  position: absolute;
-  top: 20px;
-  right: 5%;
-  display: flex;
-  align-items: center;
+  width: 100%;
+  margin-top: 20px; /* 검색창을 상단에 위치시키기 위해 여백 추가 */
 }
 
 .search-bar {
-  width: 100%;
+  width: 60%;
   padding: 10px 20px;
   font-family: 'NanumBarunGothic';
   font-size: 12px;
   font-weight: lighter;
-  border-radius: 20px; /* 둥근 모서리 추가 */
+  border-radius: 20px;
   background-color: #F7F4F3; 
-  border: none; /* 테두리 제거 */
+  border: none;
 }
 
 .search-bar:focus {
@@ -118,13 +117,13 @@ export default {
   border-radius: 10px;
   text-align: center;
   width: 95%;
+  margin-top: 20px; /* 검색창 아래로 여백 추가 */
 }
 
 .summoner-profile {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column; /* 수직 정렬 */
 }
 
 .summoner-icon-placeholder {
@@ -135,7 +134,7 @@ export default {
   height: 100px;
   background-color: #e0e0e0;
   border-radius: 50%;
-  margin-bottom: 20px; /* 아래쪽 여백 */
+  margin-right: 20px;
 }
 
 .summoner-icon {
@@ -144,39 +143,78 @@ export default {
   border-radius: 50%;
 }
 
-.summoner-details-placeholder h2 {
+.summoner-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.summoner-details h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 24px;
+}
+
+.summoner-details p {
   margin: 0;
   color: #999;
+  font-size: 16px;
 }
 
-.additional-info-container {
-  margin-top: 20px;
-  width: 100%;
+.champion-stats-container {
   display: flex;
   justify-content: space-around;
+  width: 100%;
+  margin-top: 20px;
 }
 
-.win-rate-container, .match-history-container {
-  background-color: #F7F4F3;
-  padding: 20px;
-  border-radius: 10px;
+.champion-stats {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.champion-icon-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.champion-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.champion-details p {
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+}
+
+.match-history-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.match-history {
+  border: 2px solid black;
   width: 45%;
+  height: 200px; /* 원하는 높이로 조정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.win-rate-container h3, .match-history-container h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 5px;
-}
-
-.champion-win-rate, .match-history {
-  border: 1px dashed #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.champion-win-rate:last-child, .match-history:last-child {
-  margin-bottom: 0;
+.match-history p {
+  margin: 0;
+  font-size: 24px;
 }
 </style>

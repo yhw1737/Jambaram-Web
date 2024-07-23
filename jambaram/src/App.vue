@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar />
+    <NavBar :key="$route.fullPath"/>
     <div class="background-image"></div>
     <div class="divider left-divider"></div>
     <div class="divider right-divider"></div>
@@ -27,7 +27,7 @@ export default {
 <style>
 
 #app {
-  font-family: 'NanumBarunGothic', Arial, Helvetica, sans-serif;
+  font-family: 'NanumBarunGothic', 'Cafe24Moyamoya-Regular-v1.0', 'Cafe24SsurroundAir';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -36,6 +36,19 @@ export default {
   min-height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+::-webkit-scrollbar {
+  width: 10px; /* 스크롤바 너비 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #7c96c6; /* 스크롤바 색상 */
+  border-radius: 10px; /* 스크롤바 모서리 둥글게 */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #212D40; /* 스크롤바 트랙 색상 */
 }
 
 .divider {
@@ -59,6 +72,20 @@ export default {
   .divider {
     display: none;
   }
+}
+
+@font-face {
+    font-family: 'Cafe24Moyamoya-Regular-v1.0';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/Cafe24Moyamoya-Regular-v1.0.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cafe24SsurroundAir';
+    src: url('https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
