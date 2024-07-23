@@ -68,7 +68,7 @@ export default {
     circleStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 90;
-      if (selectedCount >= 8) baseSize = 90 - 8 * (selectedCount - 7);
+      if (selectedCount >= 6) baseSize = 90 - 6 * (selectedCount - 5);
 
       return {
         width: `${baseSize}px`,
@@ -79,7 +79,7 @@ export default {
     imgStyle() {
       const selectedCount = this.selectedChampions.length;
       let baseSize = 90;
-      if (selectedCount >= 8) baseSize = 90 - 8 * (selectedCount - 7);
+      if (selectedCount >= 6) baseSize = 90 - 6 * (selectedCount - 5);
 
       return {
         width: `${baseSize}px`,
