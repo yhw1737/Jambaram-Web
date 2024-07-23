@@ -6,7 +6,21 @@
           <img src="../assets/empty-champion.png" alt="소환사 아이콘" class="summoner-icon">
         </div>
         <div class="summoner-details-placeholder">
-          <h2>소환사를 검색하세요</h2>
+          <h2>-------#KR1</h2>
+        </div>
+      </div>
+      <div class="additional-info-container">
+        <div class="win-rate-container">
+          <h3>챔피언별 승률</h3>
+          <div class="champion-win-rate" v-for="i in 3" :key="i">
+            <p>챔피언 {{ i }}</p>
+          </div>
+        </div>
+        <div class="match-history-container">
+          <h3>전적</h3>
+          <div class="match-history" v-for="i in 5" :key="i">
+            <p>전적 {{ i }}</p>
+          </div>
         </div>
       </div>
       <div class="search-bar-container">
@@ -99,7 +113,6 @@ export default {
 }
 
 .summoner-info-container {
-  position: absolute;
   background: #364156;
   padding: 20px;
   border-radius: 10px;
@@ -110,6 +123,8 @@ export default {
 .summoner-profile {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column; /* 수직 정렬 */
 }
 
 .summoner-icon-placeholder {
@@ -120,7 +135,7 @@ export default {
   height: 100px;
   background-color: #e0e0e0;
   border-radius: 50%;
-  margin-right: 20px;
+  margin-bottom: 20px; /* 아래쪽 여백 */
 }
 
 .summoner-icon {
@@ -134,4 +149,34 @@ export default {
   color: #999;
 }
 
+.additional-info-container {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.win-rate-container, .match-history-container {
+  background-color: #F7F4F3;
+  padding: 20px;
+  border-radius: 10px;
+  width: 45%;
+}
+
+.win-rate-container h3, .match-history-container h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.champion-win-rate, .match-history {
+  border: 1px dashed #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.champion-win-rate:last-child, .match-history:last-child {
+  margin-bottom: 0;
+}
 </style>
