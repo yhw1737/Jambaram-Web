@@ -1,21 +1,40 @@
 <template>
   <div>
     <div class="selected-champions" ref="selectedChampionsContainer">
-      <div v-for="(champion, index) in selectedChampions" :key="index" class="circle" @click="removeChampion(index)" :style="circleStyle" :class="{ fixed: isFixed(champion) }">
-        <img v-if="champion" :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img" :style="imgStyle">
+      <div 
+        v-for="(champion, index) in selectedChampions" 
+        :key="index" 
+        class="circle" 
+        @click="removeChampion(index)" 
+        @contextmenu.prevent="toggleFixedChampion(champion)" 
+        :style="circleStyle" 
+        :class="{ fixed: isFixed(champion) }"
+      >
+        <img 
+          v-if="champion" 
+          :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" 
+          alt="champion" 
+          class="circle-img" 
+          :style="imgStyle"
+        >
       </div>
     </div>
     <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
     <div class="champion-list-container">
       <div class="champion-list">
-        <div v-for="(champion, index) in filteredChampions" 
-             :key="index" 
-             class="champion" 
-             @click="toggleChampion(champion)"
-             @contextmenu.prevent="toggleFixedChampion(champion)">
-          <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" 
-               class="circle-img" 
-               :class="{ selected: isSelected(champion), fixed: isFixed(champion) }">
+        <div 
+          v-for="(champion, index) in filteredChampions" 
+          :key="index" 
+          class="champion" 
+          @click="toggleChampion(champion)"
+          @contextmenu.prevent="toggleFixedChampion(champion)"
+        >
+          <img 
+            :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" 
+            alt="champion" 
+            class="circle-img" 
+            :class="{ selected: isSelected(champion), fixed: isFixed(champion) }"
+          >
         </div>
       </div>
     </div>
