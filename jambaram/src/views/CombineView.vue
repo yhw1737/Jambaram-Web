@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="selected-champions" ref="selectedChampionsContainer">
-      <div v-for="(champion, index) in selectedChampions" :key="index" class="circle" @click="removeChampion(index)" :style="circleStyle">
+      <div v-for="(champion, index) in selectedChampions" :key="index" class="circle" @click="removeChampion(index)" :style="circleStyle" :class="{ fixed: isFixed(champion) }">
         <img v-if="champion" :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img" :style="imgStyle">
       </div>
     </div>
@@ -11,8 +11,11 @@
         <div v-for="(champion, index) in filteredChampions" 
              :key="index" 
              class="champion" 
-             @click="toggleChampion(champion)">
-          <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" class="circle-img" :class="{ selected: isSelected(champion) }">
+             @click="toggleChampion(champion)"
+             @contextmenu.prevent="toggleFixedChampion(champion)">
+          <img :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" alt="champion" 
+               class="circle-img" 
+               :class="{ selected: isSelected(champion), fixed: isFixed(champion) }">
         </div>
       </div>
     </div>
@@ -22,7 +25,7 @@
       <p class="win-prob" :style="{ color: winProbColor }">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
       <div class="optimal-champion-list">
         <div v-for="(championId, index) in optimalCombination.champions" :key="index" class="champion">
-          <img :src="getChampionImage(championId)" alt="champion" class="circle-img">
+          <img :src="getChampionImage(championId)" alt="champion" class="circle-img" :class="{ fixed: isFixedById(championId) }">
           <div class="champion-name">{{ getChampionName(championId) }}</div>
         </div>
       </div>
@@ -41,6 +44,7 @@ export default {
       searchQuery: '',
       champions: [],
       selectedChampions: [],
+      fixedChampions: [], // 고정된 챔피언 목록
       optimalCombination: {
         champions: [],
         win_prob: 0
@@ -93,6 +97,12 @@ export default {
     isSelected(champion) {
       return this.selectedChampions.includes(champion);
     },
+    isFixed(champion) {
+      return this.fixedChampions.includes(champion);
+    },
+    isFixedById(championId) {
+      return this.fixedChampions.some(champion => parseInt(champion.key) === championId);
+    },
     toggleChampion(champion) {
       const index = this.selectedChampions.indexOf(champion);
       if (index !== -1) {
@@ -106,8 +116,29 @@ export default {
         }
       }
     },
+    toggleFixedChampion(champion) {
+      if (this.fixedChampions.length >= 4 && !this.isFixed(champion)) {
+        this.errorMessage = '챔피언은 최대 4개까지 고정할 수 있습니다.';
+        this.scrollToErrorMessage();
+        return;
+      }
+      const index = this.fixedChampions.indexOf(champion);
+      if (index !== -1) {
+        this.fixedChampions.splice(index, 1);
+      } else {
+        if (!this.isSelected(champion)) {
+          this.selectedChampions.push(champion);
+        }
+        this.fixedChampions.push(champion);
+      }
+    },
     removeChampion(index) {
+      const champion = this.selectedChampions[index];
       this.selectedChampions.splice(index, 1);
+      const fixedIndex = this.fixedChampions.indexOf(champion);
+      if (fixedIndex !== -1) {
+        this.fixedChampions.splice(fixedIndex, 1);
+      }
     },
     updateContainerWidth() {
       if (this.$refs.selectedChampionsContainer) {
@@ -115,10 +146,16 @@ export default {
       }
     },
     async submitChampions() {
+      if (this.fixedChampions.length > 4) {
+        this.errorMessage = '챔피언은 최대 4개까지 고정할 수 있습니다.';
+        this.scrollToErrorMessage();
+        return;
+      }
       if (this.selectedChampions.length >= 5 && this.selectedChampions.length <= 12) {
         try {
           const response = await axios.post('http://jambaram.xyz:10055/api/combination', {
-            champion_list: this.selectedChampions.map(champion => parseInt(champion.key))
+            champion_list: this.selectedChampions.map(champion => parseInt(champion.key)),
+            fixed_list: this.fixedChampions.map(champion => parseInt(champion.key))
           });
           this.optimalCombination.champions = response.data.champions;
           this.optimalCombination.win_prob = response.data.win_prob;
@@ -201,7 +238,7 @@ export default {
 
 .circle {
   border-radius: 50%;
-  border: 2px solid #ccc;
+  border: 2px solid #F7F4F3;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -211,12 +248,23 @@ export default {
 }
 
 .circle-img {
+  border: 2px solid #364156;
+  border-radius: 50%;
   object-fit: cover;
   transition: width 0.3s, height 0.3s;
 }
 
+.circle.fixed {
+  border: 2px solid #cf4529; /* 고정된 챔피언의 테두리 색상 */
+}
+
 .circle-img.selected {
+  border: 2px solid #F7F4F3;
   opacity: 0.6;
+} 
+
+.circle-img.fixed {
+  border: 2px solid #cf4529; /* 고정된 챔피언의 테두리 색상 */
 }
 
 .search-bar {
@@ -252,10 +300,6 @@ export default {
   height: 80px;
 }
 
-.champion.selected {
-  background-color: transparent;
-}
-
 .champion img {
   width: 100%;
   height: 100%;
@@ -287,10 +331,17 @@ export default {
   justify-content: center;
 }
 
+.optimal-combination .optimal-champion-list .champion img.fixed {
+  border: 2px solid #cf4529;
+}
+
+.optimal-combination .optimal-champion-list .champion img {
+  border: 2px solid #F7F4F3;
+}
+
 .error-message {
-  color: #D66853;
+  color: #cf4529;
   margin-top: 20px;
   text-align: center;
 }
-
 </style>
