@@ -18,7 +18,7 @@
       <div class="version-info">v14.14.1</div>
       <select class="language-select" v-model="selectedLanguage" @change="changeLanguage">
         <option value="ko">한국어</option>
-        <option value="en">English</option>
+        <option value="en">English(disabled)</option>
       </select>
     </div>
   </div>
@@ -65,7 +65,7 @@ export default {
 }
 
 .navbar-left {
-  margin-left: 100px;
+  padding-left: 100px;
   display: flex;
   align-items: center;
 }
@@ -124,7 +124,7 @@ export default {
 }
 
 .navbar-right {
-  margin-right: 100px;
+  padding-right: 100px;
   display: flex;
   align-items: center;
 }
@@ -138,5 +138,11 @@ export default {
 .language-select {
   padding: 5px;
   font-family: 'Cafe24SsurroundAir';
+}
+
+@media (max-width: 1200px) {
+  .navbar-center {
+    display: none;
+  }
 }
 </style>

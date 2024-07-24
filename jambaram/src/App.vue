@@ -61,11 +61,11 @@ export default {
 }
 
 .left-divider {
-  left: 20%;
+  left: 150px;
 }
 
 .right-divider {
-  right: 20%;
+  right: 150px;
 }
 
 @media (max-width: 1500px) {
