@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
+      - main  # 또는 빌드를 트리거하고 싶은 브랜치 이름
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '20'
+        node-version: '20'  # 사용할 Node.js 버전
 
     - name: Install dependencies
       working-directory: jambaram
@@ -30,14 +30,15 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build
-        path: jambaram/dist
+        path: jambaram/dist  # 빌드 결과물의 디렉토리
 
     - name: Deploy to server
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SERVER_USER: ${{ secrets.SERVER_USER }}
-        SERVER_HOST: ${{ secrets.SERVER_HOST }}
-        SERVER_PATH: ${{ secrets.SERVER_PATH }}
-      run: |
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        user: ${{ secrets.SERVER_USER }}
+	password: ${{ secrets.SERVER_PASSWORD }}
+        host: ${{ secrets.SERVER_HOST }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: whoami
         # Upload build files to the server
-        scp -r jambaram/dist/* $SERVER_USER@$SERVER_HOST:$SERVER_PATH
+        # scp -P $SERVER_PORT -r jambaram/dist/* $SERVER_USER@$SERVER_HOST:$SERVER_PATH
