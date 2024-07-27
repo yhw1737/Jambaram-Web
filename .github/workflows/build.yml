@@ -35,10 +35,9 @@ jobs:
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.3
       with:
-        user: ${{ secret.SERVER_USER }}
-	password: ${{ secret.SERVER_PASSWORD }}
-        host: ${{ secret.SERVER_HOST }}
-        port: ${{ secret.SERVER_PORT }}
-        script: whoami
-        # Upload build files to the server
-        # scp -P $SERVER_PORT -r jambaram/dist/* $SERVER_USER@$SERVER_HOST:$SERVER_PATH
+	host: ${{ secrets.SERVER_HOST }}
+        user_name: ${{ secrets.SERVER_USER }}
+	password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: |
+		ls
