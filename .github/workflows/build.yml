@@ -13,8 +13,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: |
-	  ls
+        script: ls
 		#cd Jambaram-Web
 		#git pull 
 		#cd jambaram
