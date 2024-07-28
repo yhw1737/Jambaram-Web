@@ -14,7 +14,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-		ls
+	  ls
 		#cd Jambaram-Web
 		#git pull 
 		#cd jambaram
