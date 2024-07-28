@@ -9,7 +9,10 @@
       <div class="item A">A</div>
       <div class="item B">B</div>
       <div class="item C">C</div>
-      <div class="item D">D</div>
+      <div class="search-bar-container">
+        <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="summoner#KR1" class="search-bar">
+        <img src="../assets/search.png" alt="search icon" class="search-icon" @click="searchSummoner">
+      </div>
       <div class="item E">E</div>
       <div class="item F">F</div>
       <div class="item G">G</div>
@@ -24,8 +27,16 @@ export default {
   name: 'SummonerView',
   data() {
     return {
-      summonerInfo: null
+      summonerName: '',
+      summonerInfo: null,
     };
+  },
+  methods: {
+    async searchSummoner() {
+      if (this.summonerName.trim() !== '') {
+        this.$router.push(`/search/${this.summonerName.trim()}`);
+      }
+    }
   },
   async created() {
     const summonerName = this.$route.params.summonerName;
@@ -100,8 +111,38 @@ export default {
   grid-area: C;
 }
 
-.item.D {
+.search-bar-container {
   grid-area: D;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.search-bar {
+  width: 100%;
+  margin: 0;
+  height: 20px;
+  padding: 10px 20px;
+  font-family: 'NanumBarunGothic';
+  font-size: 12px;
+  font-weight: lighter;
+  border-radius: 20px;
+  background-color: #F7F4F3; 
+  border: none;
+}
+
+.search-bar:focus {
+  outline: none; /* 포커스 시 외곽선 제거 */
+}
+
+.search-icon {
+  width: 11px;
+  height: 10px;
+  margin-left: -30px; /* 검색창 오른쪽에 배치 */  
+  cursor: pointer;
 }
 
 .item.E {

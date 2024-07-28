@@ -17,7 +17,14 @@
         >
       </div>
     </transition-group>
-    <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
+    <div class="search-bar-container">
+      <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
+      <div class="action-buttons">
+        <div class="action-button info" @mouseover="showTooltip = true" @mouseleave="showTooltip = false">?</div>
+        <div class="action-button reset" @click="resetChampions">X</div>
+        <div class="tooltip" v-if="showTooltip">챔피언을 선택하고, 고정하려면 우클릭하세요. 고정된 챔피언은 조합 결과에 필수 반영됩니다.</div>
+      </div>
+    </div>
     <div class="champion-list-container">
       <div class="champion-list">
         <div 
@@ -67,7 +74,8 @@ export default {
       },
       loading: true,
       containerWidth: 0,
-      errorMessage: ''
+      errorMessage: '',
+      showTooltip: false // 툴팁 상태
     };
   },
   computed: {
@@ -137,6 +145,10 @@ export default {
         this.fixedChampions.splice(fixedIndex, 1);
       }
     },
+    resetChampions() {
+      this.selectedChampions = [];
+      this.fixedChampions = [];
+    },
     onLeave(el, done) {
       const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = el;
       el.style.position = 'absolute';
@@ -150,11 +162,6 @@ export default {
         el.addEventListener('transitionend', done);
       });
     },
-    // updateContainerWidth() {
-    //   if (this.$refs.selectedChampionsContainer) {
-    //     this.containerWidth = this.$refs.selectedChampionsContainer.clientWidth;
-    //   }
-    // },
     async submitChampions() {
       if (this.fixedChampions.length > 4) {
         this.errorMessage = '챔피언은 최대 4개까지 고정할 수 있습니다.';
@@ -217,17 +224,11 @@ export default {
         key: champion.key // 챔피언 ID 추가
       }));
       this.champions.sort((a, b) => a.koreanName.localeCompare(b.koreanName)); // 한국어 이름으로 정렬
-
-      // window.addEventListener('resize', this.updateContainerWidth);
-      // this.$nextTick(this.updateContainerWidth);
     } catch (error) {
       console.error('Failed to load champion data:', error);
     } finally {
       this.loading = false;
     }
-  },
-  beforeUnmount() {
-    // window.removeEventListener('resize', this.updateContainerWidth);
   }
 };
 </script>
@@ -244,19 +245,20 @@ export default {
 }
 
 .mid-win-prob {
-  color: #aeb3b6;
+  color: #9e9e9e;
 }
 
 .high-win-prob {
-  color: #0ec60b;
+  color: #0bc67e;
 }
 
 .aurora {
   background: linear-gradient(270deg, #f5b1b0, #aa78d7, #4a90e2, #a0e8af);
   background-size: 400% 400%;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: aurora 5s ease infinite;
+  animation: aurora 2s ease infinite;
 }
 
 .selected-champions {
@@ -315,14 +317,53 @@ export default {
   border: 2px solid #cf4529; /* 고정된 챔피언의 테두리 색상 */
 }
 
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 검색창이 가운데로 유지되도록 설정 */
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .search-bar {
   width: 50%;
   padding: 10px;
   font-size: 16px;
-  margin-bottom: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  margin-left: 10px; /* 검색창과 버튼 사이의 간격 조정 */
+}
+
+.action-button {
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #364156;
+  color: white;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.action-button.info {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100px; /* 검색창과 툴팁 사이의 간격 조정 */
+  right: 0;
+  background: #364156;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  width: 200px; /* 툴팁의 너비 설정 */
+  text-align: center;
 }
 
 .champion-list-container {

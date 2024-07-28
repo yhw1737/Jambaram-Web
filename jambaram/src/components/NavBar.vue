@@ -3,7 +3,7 @@
     <div class="navbar-left">
       <router-link to="/" class="logo-link">
         <img src="../assets/icon03.png" alt="로고" class="logo" />
-        <span class="site-name">잼바람<span class="site-name2">.XYZ</span></span>
+        <span class="site-name">잼바람<span class="site-name2">.xyz</span></span>
       </router-link>
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
@@ -51,7 +51,7 @@ export default {
   left: 0;
   right: 0;
   height: 60px; /* Adjusted height */
-  background: linear-gradient(270deg, #62D6C0, #5BC7CE, #54B9DC, #4DAAE9, #469CF8);
+  background-color: #364156;
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -79,7 +79,10 @@ export default {
 
 .site-name {
   font-family: 'Cafe24Moyamoya-Regular-v1.0';
-  color: white;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(270deg, #62D6C0, #5BC7CE, #54B9DC, #4DAAE9, #469CF8);
+  color: transparent;
   font-size: 45px;
   font-weight: light;
 }
