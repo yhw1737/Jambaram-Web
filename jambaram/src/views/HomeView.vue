@@ -40,7 +40,7 @@ export default {
 
 .search-bar-container {
   width: 100%;
-  /* margin-top: 400px; */
+  margin-top: 400px;
 }
 
 .search-bar {

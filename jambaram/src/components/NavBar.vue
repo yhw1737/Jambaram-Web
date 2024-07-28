@@ -1,21 +1,30 @@
 <template>
-  <div class="navbar">
-    <div class="navbar-left">
-      <router-link to="/" class="logo-link">
-        <img src="../assets/icon03.png" alt="로고" class="logo" />
-        <span class="site-name">잼바람<span class="site-name2">.xyz</span></span>
-      </router-link>
+  <div>
+    <div class="navbar">
+      <div class="navbar-left">
+        <router-link to="/" class="logo-link">
+          <img src="../assets/icon03.png" alt="로고" class="logo" />
+          <span class="site-name">잼바람<span class="site-name2">.xyz</span></span>
+        </router-link>
+      </div>
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
         <router-link to="/combine" class="menu-item" exact>조합</router-link>
       </div>
+      <div class="navbar-right">
+        <div class="version-info">v14.14.1</div>
+        <select class="language-select" v-model="selectedLanguage" @change="changeLanguage">
+          <option value="ko">한국어</option>
+          <option value="en">English(disabled)</option>
+        </select>
+      </div>
     </div>
-    <div class="navbar-right">
-      <div class="version-info">v14.14.1</div>
-      <select class="language-select" v-model="selectedLanguage" @change="changeLanguage">
-        <option value="ko">한국어</option>
-        <option value="en">English(disabled)</option>
-      </select>
+    <div v-if="isMobile" class="dropdown-menu">
+      <button @click="toggleDropdown" class="dropdown-toggle">메뉴</button>
+      <div v-if="showDropdown" class="dropdown-content">
+        <router-link to="/" class="menu-item" @click="toggleDropdown">홈</router-link>
+        <router-link to="/combine" class="menu-item" @click="toggleDropdown">조합</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -26,17 +35,30 @@ export default {
   data() {
     return {
       selectedLanguage: 'ko',
+      isMobile: false,
+      showDropdown: false,
     };
   },
   methods: {
     changeLanguage() {
-      // 언어 변경 로직을 여기에 추가하세요.
       console.log('Language changed to:', this.selectedLanguage);
     },
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
+    checkMobile() {
+      this.isMobile = window.innerWidth <= 1200;
+    },
+  },
+  mounted() {
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.checkMobile);
   },
   beforeRouteLeave(to, from, next) {
     if (window.history.state && window.history.state.back) {
-      // 뒤로 가기 감지
       this.$router.go(0);
     } else {
       next();
@@ -50,18 +72,17 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  height: 60px; /* Adjusted height */
+  height: 60px; 
   background-color: #364156;
   display: flex;
   align-items: center;
   padding: 0 20px;
   z-index: 1;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Separator */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
 }
 
 .navbar-left {
-  padding-left: 100px;
   display: flex;
   align-items: center;
 }
@@ -102,28 +123,27 @@ export default {
   font-family: 'Pretendard-Regular';
   background: none;
   border: none;
-  color: #959595; /* Extracted color */
-  font-size: 16px; /* Increased font size */
-  margin: 0 10px; /* 간격 조정 */
+  color: #959595;
+  font-size: 16px;
+  margin: 0 10px;
   padding: 0 20px;
   border-radius: 10px;
   cursor: pointer;
   text-decoration: none;
   display: flex;
   align-items: center;
-  height: 40px; /* Set height to 50px */
-  transition: background-color 0.3s, color 0.3s; /* Transition 효과 추가 */
+  height: 40px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .menu-item:hover,
 .menu-item:focus,
 .menu-item.router-link-exact-active {
-  background-color: #212D40; /* 마우스 오버 및 포커스 시 배경색 */
+  background-color: #212D40;
   color: white;
 }
 
 .navbar-right {
-  padding-right: 100px;
   display: flex;
   align-items: center;
 }
@@ -139,9 +159,68 @@ export default {
   font-family: 'Cafe24SsurroundAir';
 }
 
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown-toggle {
+  display: none;
+  background-color: #364156;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: 'Pretendard-Regular';
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.dropdown-content {
+  display: flex;
+  flex-direction: column;
+  background-color: #364156;
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  right: 20px;
+  border: 1px solid #212D40;
+  border-radius: 10px;
+  z-index: 10;
+}
+
 @media (max-width: 1200px) {
-  .navbar-center {
+  .navbar {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .navbar-center,
+  .navbar-right {
     display: none;
+  }
+
+  .navbar-left {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .dropdown-menu {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .dropdown-toggle {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .site-name {
+    font-size: 30px;
+  }
+
+  .site-name2 {
+    font-size: 15px;
   }
 }
 </style>

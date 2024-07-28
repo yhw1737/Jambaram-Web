@@ -356,7 +356,7 @@ export default {
 
 .tooltip {
   position: absolute;
-  top: 100px; /* 검색창과 툴팁 사이의 간격 조정 */
+  top: 120px; /* 검색창과 툴팁 사이의 간격 조정 */
   right: 0;
   background: #364156;
   color: white;
