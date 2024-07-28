@@ -14,9 +14,3 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: ls
-		#cd Jambaram-Web
-		#git pull 
-		#cd jambaram
-		#npm install
-		#npm run build
-		#echo Finished!
