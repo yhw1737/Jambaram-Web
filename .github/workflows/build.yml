@@ -17,7 +17,7 @@ jobs:
             cd Jambaram-Web
             git pull
             cd jambaram
-            export NVM_DIR=~/.nv
+            export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
             npm --help
             npm install
