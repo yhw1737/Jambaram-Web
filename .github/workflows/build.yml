@@ -1,41 +1,16 @@
-name: Build and Deploy
-
+name: remote ssh command
 on: [push]
-
 jobs:
 
   build:
+    name: Build
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'  # 사용할 Node.js 버전
-
-    - name: Install dependencies
-      working-directory: jambaram
-      run: npm install
-
-    - name: Build project
-      working-directory: jambaram
-      run: npm run build
-
-    - name: Upload production build artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: build
-        path: jambaram/dist  # 빌드 결과물의 디렉토리
-
-    - name: Deploy to server
+    - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v1.0.3
       with:
-	host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
-	password: ${{ secrets.PASSWORD }}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: |
-		whoami
+        script: whoami
