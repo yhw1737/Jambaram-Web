@@ -40,7 +40,7 @@ export default {
 
 .search-bar-container {
   width: 100%;
-  margin-top: 400px; /* 검색창을 상단에 위치시키기 위해 여백 추가 */
+  /* margin-top: 400px; */
 }
 
 .search-bar {
