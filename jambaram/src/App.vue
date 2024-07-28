@@ -68,12 +68,6 @@ export default {
   right: 200px;
 }
 
-@media (max-width: 1500px) {
-  .divider {
-    display: none;
-  }
-}
-
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -145,5 +139,15 @@ body {
   padding: 20px;
   flex-grow: 1;
   overflow-y: auto;
+}
+
+@media (max-width: 1200px) {
+  .main-content {
+    left: 0;
+    width: 100%;
+  }
+  .divider {
+    display: none;
+  }
 }
 </style>
