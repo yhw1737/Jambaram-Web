@@ -14,3 +14,5 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             ls
+	    cd Jambaram-Web
+	    git pull
