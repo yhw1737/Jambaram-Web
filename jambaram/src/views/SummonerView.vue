@@ -1,0 +1,120 @@
+<template>
+  <div v-if="summonerInfo" class="summoner-info-container">
+    <!-- 소환사 정보가 있을 때의 레이아웃 -->
+    <h1>{{ summonerInfo.name }}</h1>
+    <!-- 추가적인 소환사 정보를 여기에 추가 -->
+  </div>
+  <div v-else class="not-found-container">
+    <div class="layout">
+      <div class="item A">A</div>
+      <div class="item B">B</div>
+      <div class="item C">C</div>
+      <div class="item D">D</div>
+      <div class="item E">E</div>
+      <div class="item F">F</div>
+      <div class="item G">G</div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'SummonerView',
+  data() {
+    return {
+      summonerInfo: null
+    };
+  },
+  async created() {
+    const summonerName = this.$route.params.summonerName;
+    try {
+      const response = await axios.get(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`, {
+        headers: {
+          'X-Riot-Token': 'YOUR_API_KEY' // 여기에 라이엇 API 키를 넣으세요
+        }
+      });
+      this.summonerInfo = {
+        name: response.data.name,
+        summonerLevel: response.data.summonerLevel,
+        profileIconUrl: `http://ddragon.leagueoflegends.com/cdn/11.1.1/img/profileicon/${response.data.profileIconId}.png`,
+        masteryChampions: [
+          { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Aatrox.png' },
+          { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Ahri.png' },
+          { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Akali.png' }
+        ]
+      };
+    } catch (error) {
+      console.error('Failed to fetch summoner info:', error);
+      this.summonerInfo = null;
+    }
+  }
+};
+</script>
+
+<style scoped>
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
+  color: white;
+}
+
+.layout {
+  display: grid;
+  grid-template-areas:
+    "D D E"
+    "A B E"
+    "A C E"
+    "F F F"
+    "G G G";
+  grid-gap: 10px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.item.A {
+  grid-area: A;
+  border-radius: 50%;
+  height: 150px; /* Adjust height as needed */
+  width: 150px; /* Adjust width as needed */
+}
+
+.item.B {
+  grid-area: B;
+}
+
+.item.C {
+  grid-area: C;
+}
+
+.item.D {
+  grid-area: D;
+}
+
+.item.E {
+  grid-area: E;
+}
+
+.item.F {
+  grid-area: F;
+}
+
+.item.G {
+  grid-area: G;
+  display: flex;
+  flex-direction: column;
+}
+</style>

@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
   name: 'HomeView',
@@ -21,26 +20,7 @@ export default {
   methods: {
     async searchSummoner() {
       if (this.summonerName.trim() !== '') {
-        try {
-          const response = await axios.get(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${this.summonerName}`, {
-            headers: {
-              'X-Riot-Token': 'YOUR_API_KEY' // 여기에 라이엇 API 키를 넣으세요
-            }
-          });
-          this.summonerInfo = {
-            name: response.data.name,
-            summonerLevel: response.data.summonerLevel,
-            profileIconUrl: `http://ddragon.leagueoflegends.com/cdn/11.1.1/img/profileicon/${response.data.profileIconId}.png`,
-            masteryChampions: [
-              { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Aatrox.png' },
-              { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Ahri.png' },
-              { iconUrl: 'http://ddragon.leagueoflegends.com/cdn/11.1.1/img/champion/Akali.png' }
-            ]
-          };
-        } catch (error) {
-          console.error('Failed to fetch summoner info:', error);
-          this.summonerInfo = null;
-        }
+        this.$router.push(`/search/${this.summonerName.trim()}`);
       }
     }
   }

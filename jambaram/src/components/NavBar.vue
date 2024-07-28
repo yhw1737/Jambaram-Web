@@ -8,10 +8,6 @@
       <div class="navbar-center">
         <router-link to="/" class="menu-item" exact>홈</router-link>
         <router-link to="/combine" class="menu-item" exact>조합</router-link>
-        <router-link to="/champions" class="menu-item" exact>챔피언</router-link>
-        <router-link to="/spells" class="menu-item" exact>스펠</router-link>
-        <router-link to="/items" class="menu-item" exact>아이템</router-link>
-        <router-link to="/runes" class="menu-item" exact>룬</router-link>
       </div>
     </div>
     <div class="navbar-right">
@@ -55,7 +51,7 @@ export default {
   left: 0;
   right: 0;
   height: 60px; /* Adjusted height */
-  background-color: #364156;
+  background: linear-gradient(270deg, #62D6C0, #5BC7CE, #54B9DC, #4DAAE9, #469CF8);
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -100,11 +96,11 @@ export default {
 }
 
 .menu-item {
-  font-family: 'Cafe24SsurroundAir';
+  font-family: 'Pretendard-Regular';
   background: none;
   border: none;
   color: #959595; /* Extracted color */
-  font-size: 18px; /* Increased font size */
+  font-size: 16px; /* Increased font size */
   margin: 0 10px; /* 간격 조정 */
   padding: 0 20px;
   border-radius: 10px;

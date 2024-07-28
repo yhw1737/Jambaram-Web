@@ -1,11 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import CombineView from '../views/CombineView.vue';
-import ChampionsView from '../views/ChampionsView.vue';
-import SpellsView from '../views/SpellsView.vue';
-import ItemsView from '../views/ItemsView.vue';
-import RunesView from '../views/RunesView.vue';
 import NotFound from '../views/NotFound.vue';
+import SummonerView from '../views/SummonerView.vue';
 
 const routes = [
   {
@@ -19,24 +16,9 @@ const routes = [
     component: CombineView
   },
   {
-    path: '/champions',
-    name: 'Champions',
-    component: ChampionsView
-  },
-  {
-    path: '/spells',
-    name: 'Spells',
-    component: SpellsView
-  },
-  {
-    path: '/items',
-    name: 'Items',
-    component: ItemsView
-  },
-  {
-    path: '/runes',
-    name: 'Runes',
-    component: RunesView
+    path: '/search/:summonerName',
+    name: 'Summoner',
+    component: SummonerView
   },
   {
     path: '/:pathMatch(.*)*', // catch all routes

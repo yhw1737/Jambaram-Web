@@ -20,7 +20,6 @@ export default {
   height: 100vh;
   text-align: center;
   color: white;
-  background-color: #111;
 }
 
 .not-found-container h1 {

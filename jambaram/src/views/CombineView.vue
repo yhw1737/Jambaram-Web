@@ -1,13 +1,12 @@
 <template>
   <div>
-    <div class="selected-champions" ref="selectedChampionsContainer">
+    <transition-group name="list" tag="div" class="selected-champions" ref="selectedChampionsContainer" @leave="onLeave">
       <div 
         v-for="(champion, index) in selectedChampions" 
-        :key="index" 
+        :key="champion.key" 
         class="circle" 
         @click="removeChampion(index)" 
         @contextmenu.prevent="toggleFixedChampion(champion)" 
-        :style="circleStyle" 
         :class="{ fixed: isFixed(champion) }"
       >
         <img 
@@ -15,10 +14,9 @@
           :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" 
           alt="champion" 
           class="circle-img" 
-          :style="imgStyle"
         >
       </div>
-    </div>
+    </transition-group>
     <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
     <div class="champion-list-container">
       <div class="champion-list">
@@ -41,11 +39,10 @@
     <button @click="submitChampions" class="submit-button">최적의 조합 찾기</button>
     <div v-if="errorMessage" ref="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div v-if="optimalCombination.champions.length > 0" ref="optimalCombination" class="optimal-combination">
-      <p class="win-prob" :style="{ color: winProbColor }">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
+      <p class="win-prob" :class="winProbColor">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
       <div class="optimal-champion-list">
         <div v-for="(championId, index) in optimalCombination.champions" :key="index" class="champion">
           <img :src="getChampionImage(championId)" alt="champion" class="circle-img" :class="{ fixed: isFixedById(championId) }">
-          <div class="champion-name">{{ getChampionName(championId) }}</div>
         </div>
       </div>
     </div>
@@ -76,12 +73,14 @@ export default {
   computed: {
     winProbColor() {
       const winProb = this.optimalCombination.win_prob * 100;
-      if (winProb <= 47.5) {
-        return '#D66853';
-      } else if (winProb >= 52.5) {
-        return '#7c96c6';
+      if (winProb <= 45) {
+        return 'low-win-prob';
+      } else if (winProb <= 55) {
+        return 'mid-win-prob';
+      } else if (winProb < 65){
+        return 'high-win-prob';
       } else {
-        return '#F7F4F3';
+        return 'aurora';
       }
     },
     filteredChampions() {
@@ -89,27 +88,6 @@ export default {
         champion.englishName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         champion.koreanName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
-    },
-    circleStyle() {
-      const selectedCount = this.selectedChampions.length;
-      let baseSize = 90;
-      if (selectedCount >= 6) baseSize = 90 - 6 * (selectedCount - 5);
-
-      return {
-        width: `${baseSize}px`,
-        height: `${baseSize}px`,
-        margin: '0 5px'
-      };
-    },
-    imgStyle() {
-      const selectedCount = this.selectedChampions.length;
-      let baseSize = 90;
-      if (selectedCount >= 6) baseSize = 90 - 6 * (selectedCount - 5);
-
-      return {
-        width: `${baseSize}px`,
-        height: `${baseSize}px`
-      };
     }
   },
   methods: {
@@ -159,11 +137,24 @@ export default {
         this.fixedChampions.splice(fixedIndex, 1);
       }
     },
-    updateContainerWidth() {
-      if (this.$refs.selectedChampionsContainer) {
-        this.containerWidth = this.$refs.selectedChampionsContainer.clientWidth;
-      }
+    onLeave(el, done) {
+      const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = el;
+      el.style.position = 'absolute';
+      el.style.top = `${offsetTop}px`;
+      el.style.left = `${offsetLeft}px`;
+      el.style.width = `${offsetWidth}px`;
+      el.style.height = `${offsetHeight}px`;
+      requestAnimationFrame(() => {
+        el.style.transform = 'scale(1.2)';
+        el.style.opacity = '0';
+        el.addEventListener('transitionend', done);
+      });
     },
+    // updateContainerWidth() {
+    //   if (this.$refs.selectedChampionsContainer) {
+    //     this.containerWidth = this.$refs.selectedChampionsContainer.clientWidth;
+    //   }
+    // },
     async submitChampions() {
       if (this.fixedChampions.length > 4) {
         this.errorMessage = '챔피언은 최대 4개까지 고정할 수 있습니다.';
@@ -172,7 +163,7 @@ export default {
       }
       if (this.selectedChampions.length >= 5 && this.selectedChampions.length <= 12) {
         try {
-          const response = await axios.post('http://jambaram.xyz:10055/api/combination', {
+          const response = await axios.post('http://jambaram.xyz:10090/api/model/combination', {
             champion_list: this.selectedChampions.map(champion => parseInt(champion.key)),
             fixed_list: this.fixedChampions.map(champion => parseInt(champion.key))
           });
@@ -209,10 +200,6 @@ export default {
     getChampionImage(id) {
       const champion = this.champions.find(champion => parseInt(champion.key) === id);
       return champion ? `http://ddragon.leagueoflegends.com/cdn/${this.gameversion}/img/champion/${champion.image.full}` : '';
-    },
-    getChampionName(id) {
-      const champion = this.champions.find(champion => parseInt(champion.key) === id);
-      return champion ? champion.koreanName : '';
     }
   },
   async mounted() {
@@ -231,8 +218,8 @@ export default {
       }));
       this.champions.sort((a, b) => a.koreanName.localeCompare(b.koreanName)); // 한국어 이름으로 정렬
 
-      window.addEventListener('resize', this.updateContainerWidth);
-      this.$nextTick(this.updateContainerWidth);
+      // window.addEventListener('resize', this.updateContainerWidth);
+      // this.$nextTick(this.updateContainerWidth);
     } catch (error) {
       console.error('Failed to load champion data:', error);
     } finally {
@@ -240,12 +227,38 @@ export default {
     }
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.updateContainerWidth);
+    // window.removeEventListener('resize', this.updateContainerWidth);
   }
 };
 </script>
 
 <style scoped>
+@keyframes aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.low-win-prob {
+  color: #FD151B;
+}
+
+.mid-win-prob {
+  color: #aeb3b6;
+}
+
+.high-win-prob {
+  color: #0ec60b;
+}
+
+.aurora {
+  background: linear-gradient(270deg, #f5b1b0, #aa78d7, #4a90e2, #a0e8af);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: aurora 5s ease infinite;
+}
+
 .selected-champions {
   display: flex;
   justify-content: center;
@@ -255,7 +268,21 @@ export default {
   min-height: 100px; /* 최소 높이 설정 */
 }
 
+.list-move, /* 움직이는 엘리먼트에 트랜지션 적용 */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(1.2);
+}
+
 .circle {
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   border: 2px solid #F7F4F3;
   display: flex;
@@ -263,14 +290,16 @@ export default {
   align-items: center;
   overflow: hidden;
   cursor: pointer;
-  transition: width 0.3s, height 0.3s;
+  transition: .5s;
 }
 
 .circle-img {
+  width: 70px;
+  height: 70px;
   border: 2px solid #364156;
   border-radius: 50%;
   object-fit: cover;
-  transition: width 0.3s, height 0.3s;
+  transition: .5s;
 }
 
 .circle.fixed {
@@ -297,8 +326,11 @@ export default {
 }
 
 .champion-list-container {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #11151C;
   border: 1px solid #212D40;
-  width: 100%;
+  width: 90%;
   height: 350px;
   overflow-y: auto; /* 기본적으로 스크롤바 숨김 */
 }
@@ -311,27 +343,22 @@ export default {
 }
 
 .champion {
-  padding: 10px;
-  margin: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  width: 80px;
-  height: 80px;
+  border-radius: 50%;
+  margin: 10px;
 }
 
 .champion img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
 }
 
 .submit-button {
+  font-family: 'Cafe24Moyamoya-Regular-v1.0';
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #364156;
+  background: linear-gradient(270deg, #62D6C0, #5BC7CE, #54B9DC, #4DAAE9, #469CF8);
   color: white;
   border: none;
   cursor: pointer;

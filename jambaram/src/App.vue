@@ -27,7 +27,7 @@ export default {
 <style>
 
 #app {
-  font-family: 'NanumBarunGothic', 'Cafe24Moyamoya-Regular-v1.0', 'Cafe24SsurroundAir';
+  font-family: 'Pretendard-Regular', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -39,7 +39,7 @@ export default {
 }
 
 ::-webkit-scrollbar {
-  width: 10px; /* 스크롤바 너비 */
+  width: 5px; /* 스크롤바 너비 */
 }
 
 ::-webkit-scrollbar-thumb {
@@ -61,17 +61,31 @@ export default {
 }
 
 .left-divider {
-  left: 150px;
+  left: 200px;
 }
 
 .right-divider {
-  right: 150px;
+  right: 200px;
 }
 
 @media (max-width: 1500px) {
   .divider {
     display: none;
   }
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'HSSanTokki20-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405@1.0/HSSanTokki20-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
@@ -124,8 +138,8 @@ body {
 }
 
 .main-content {
-  left: 20%;
-  width: 60%;
+  left: 250px;
+  width: calc(100% - 500px);
   position: relative;
   box-sizing: border-box;
   padding: 20px;
