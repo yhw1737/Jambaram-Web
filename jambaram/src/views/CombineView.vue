@@ -52,6 +52,7 @@
           <img :src="getChampionImage(championId)" alt="champion" class="circle-img" :class="{ fixed: isFixedById(championId) }">
         </div>
       </div>
+      <button @click="copyToClipboard" class="copy-button">복사</button>
     </div>
   </div>
 </template>
@@ -207,6 +208,16 @@ export default {
     getChampionImage(id) {
       const champion = this.champions.find(champion => parseInt(champion.key) === id);
       return champion ? `http://ddragon.leagueoflegends.com/cdn/${this.gameversion}/img/champion/${champion.image.full}` : '';
+    },
+    copyToClipboard() {
+      const championNames = this.optimalCombination.champions.map(id => this.getChampionName(id)).join(', ');
+      navigator.clipboard.writeText(championNames).then(() => {
+        alert('챔피언 목록이 복사되었습니다.');
+      });
+    },
+    getChampionName(id) {
+      const champion = this.champions.find(champion => parseInt(champion.key) === id);
+      return champion ? champion.koreanName : '';
     }
   },
   async mounted() {
@@ -338,8 +349,8 @@ export default {
 }
 
 .action-button {
-  width: 20px;
-  height: 20px;
+  width: 30px; /* 버튼 크기 키움 */
+  height: 30px; /* 버튼 크기 키움 */
   margin-left: 5px;
   display: flex;
   align-items: center;
@@ -348,15 +359,20 @@ export default {
   color: white;
   cursor: pointer;
   border-radius: 3px;
+  font-size: 18px; /* 폰트 크기 조정 */
 }
 
 .action-button.info {
   position: relative;
 }
 
+.action-button.reset {
+  background-color: #cf4529;
+}
+
 .tooltip {
   position: absolute;
-  top: 120px; /* 검색창과 툴팁 사이의 간격 조정 */
+  top: 50px; /* 검색창과 툴팁 사이의 간격 조정 */
   right: 0;
   background: #364156;
   color: white;
@@ -403,6 +419,19 @@ export default {
   color: white;
   border: none;
   cursor: pointer;
+}
+
+.copy-button {
+  font-family: 'Pretendard-Regular';
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: white;
+  color: #4daae9;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .optimal-combination {
