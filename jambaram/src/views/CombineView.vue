@@ -61,6 +61,23 @@
 <script>
 import axios from 'axios';
 
+function getInitials(text) {
+  const CHO = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+  let initials = "";
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text.charCodeAt(i);
+    if (c >= 0xAC00 && c <= 0xD7A3) {
+      const unicode = c - 0xAC00;
+      const choIndex = Math.floor(unicode / 588);
+      initials += CHO[choIndex];
+    } else {
+      initials += text[i];
+    }
+  }
+  return initials;
+}
+
 export default {
   name: 'CombineView',
   data() {
@@ -95,9 +112,11 @@ export default {
       }
     },
     filteredChampions() {
+      const query = this.searchQuery.toLowerCase();
       return this.champions.filter(champion => 
-        champion.englishName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        champion.koreanName.toLowerCase().includes(this.searchQuery.toLowerCase())
+        champion.englishName.toLowerCase().includes(query) ||
+        champion.koreanName.toLowerCase().includes(query) ||
+        getInitials(champion.koreanName).includes(query)
       );
     }
   },
@@ -462,6 +481,7 @@ export default {
   text-align: center;
   margin-top: 10px;
   animation: fadeOut 3s forwards;
+  height: 20px; /* 고정된 높이 설정 */
 }
 
 @keyframes fadeOut {
