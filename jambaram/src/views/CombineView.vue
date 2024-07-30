@@ -53,6 +53,7 @@
         </div>
       </div>
       <button @click="copyToClipboard" class="copy-button">복사</button>
+      <div v-if="copySuccess" class="copy-success">클립보드에 복사되었습니다</div>
     </div>
   </div>
 </template>
@@ -76,7 +77,8 @@ export default {
       loading: true,
       containerWidth: 0,
       errorMessage: '',
-      showTooltip: false // 툴팁 상태
+      showTooltip: false, // 툴팁 상태
+      copySuccess: false // 복사 성공 메시지 상태
     };
   },
   computed: {
@@ -212,8 +214,28 @@ export default {
     copyToClipboard() {
       const championNames = this.optimalCombination.champions.map(id => this.getChampionName(id)).join(', ');
       navigator.clipboard.writeText(championNames).then(() => {
-        alert('챔피언 목록이 복사되었습니다.');
+        this.showCopySuccess();
+      }).catch(() => {
+        // fallback for unsupported environments
+        const textArea = document.createElement('textarea');
+        textArea.value = championNames;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          this.showCopySuccess();
+        } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+        }
+        document.body.removeChild(textArea);
       });
+    },
+    showCopySuccess() {
+      this.copySuccess = true;
+      setTimeout(() => {
+        this.copySuccess = false;
+      }, 3000);
     },
     getChampionName(id) {
       const champion = this.champions.find(champion => parseInt(champion.key) === id);
@@ -427,11 +449,28 @@ export default {
   margin: 20px auto;
   padding: 10px 20px;
   font-size: 16px;
-  background: white;
-  color: #4daae9;
+  background: #62D6C0;
+  color: #F7F4F3;
   border: none;
   cursor: pointer;
   margin-top: 10px;
+}
+
+.copy-success {
+  font-family: 'Pretendard-Regular';
+  color: #62D6C0;
+  text-align: center;
+  margin-top: 10px;
+  animation: fadeOut 3s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .optimal-combination {
