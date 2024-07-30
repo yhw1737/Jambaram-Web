@@ -10,6 +10,12 @@
 </template>
 
 <style scoped>
+@media (max-width: 768px){
+  .footer {
+    display: none;
+  }
+}
+
 p {
   line-height: 5px;
 }

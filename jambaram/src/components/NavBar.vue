@@ -3,7 +3,6 @@
     <div class="navbar">
       <div class="navbar-left">
         <router-link to="/" class="logo-link" v-if="!isMobile">
-          <img src="../assets/icon03.png" alt="로고" class="logo" />
           <span class="site-name">잼바람<span class="site-name2">.xyz</span></span>
         </router-link>
         <div class="navbar-center" v-if="!isMobile">
@@ -21,7 +20,6 @@
       <div class="navbar-center-mobile" v-if="isMobile">
         <button @click="toggleDropdown" class="dropdown-toggle">메뉴</button>
         <router-link to="/" class="logo-link mobile-logo">
-          <img src="../assets/icon03.png" alt="로고" class="logo" />
           <span class="site-name">잼바람<span class="site-name2">.xyz</span></span>
         </router-link>
       </div>
@@ -99,11 +97,6 @@ export default {
   text-decoration: none;
 }
 
-.logo {
-  height: 60px;
-  margin-right: 10px; 
-}
-
 .site-name {
   font-family: 'Cafe24Moyamoya-Regular-v1.0';
   background-clip: text;
@@ -122,7 +115,7 @@ export default {
 
 .navbar-center {
   display: flex;
-  margin-left: 80px;
+  margin-left: 100px;
 }
 
 .navbar-center-mobile {
