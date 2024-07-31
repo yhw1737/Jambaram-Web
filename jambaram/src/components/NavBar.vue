@@ -29,6 +29,7 @@
       <div class="dropdown-content">
         <router-link to="/" class="menu-item" @click="toggleDropdown">홈</router-link>
         <router-link to="/combine" class="menu-item" @click="toggleDropdown">조합</router-link>
+        <router-link to="/champion" class="menu-item" @click="toggleDropdown">챔피언</router-link>
       </div>
     </div>
   </div>
