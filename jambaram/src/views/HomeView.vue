@@ -54,7 +54,6 @@ export default {
 
 .search-bar {
   margin-top: 10vh;
-  margin-right: 20px;
   height: 20px;
   width: 60%;
   padding: 10px 20px;

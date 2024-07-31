@@ -2,20 +2,25 @@
   <div class="champions-view">
     <div class="sidebar">
       <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
-      <div class="champion-table-header">
-        <span>아이콘</span>
-        <span>이름</span>
-        <span>AI-score</span>
-        <span>티어</span>
-      </div>
-      <div v-for="champion in filteredChampions" :key="champion.id" class="champion-item" @click="selectChampion(champion)">
-        <img :src="champion.image" alt="champion">
-        <span class="champion-name" :class="{ 'long-name': champion.koreanName.length > 5 }">{{ champion.koreanName }}</span>
-        <span class="champion-score">{{ Math.round(champion.importance * 100) }}</span>
-        <span class="champion-tier" :class="`tier-${champion.tier}`">{{ champion.tier }}</span>
+      <div class="champion-table">
+        <div class="champion-table-header">
+          <span class="header-rank">순위</span>
+          <span class="header-icon">챔피언</span>
+          <span class="header-tier">티어</span>
+          <span class="header-score">AI-score</span>
+        </div>
+        <div v-for="(champion, index) in filteredChampions" :key="champion" class="champion-row" @click="selectChampion">
+          <span class="champion-rank">{{ index + 1 }}</span>
+          <img :src="champion.image" alt="champion" class="champion-icon">
+          <span class="champion-name">{{ champion.koreanName }}</span>
+          <div class="champion-tier-wrapper">
+            <span class="champion-tier" :class="`tier-${champion.tier}`">{{ champion.tier }}</span>
+          </div>
+          <span class="champion-score">{{ Math.round(champion.importance * 100) }}</span>
+        </div>
       </div>
     </div>
-    <div class="main-content2">
+    <div class="m-content">
       <div v-if="selectedChampion">
         <h2>{{ selectedChampion.koreanName }}</h2>
         <p>준비중</p>
@@ -69,15 +74,12 @@ export default {
   methods: {
     async fetchChampionData() {
       try {
-        // 중요도 데이터 가져오기
         const response = await axios.get('http://jambaram.xyz:10090/api/model/champion/feature_importance');
         const sortedFeatures = response.data.sorted_feature_importance_dict;
 
-        // 챔피언 데이터 가져오기
         const championDataResponse = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.14.1/data/ko_KR/champion.json');
         const championData = championDataResponse.data.data;
 
-        // 챔피언 매핑 및 정렬
         const champions = Object.entries(sortedFeatures).map(([key, importance]) => {
           const champion = Object.values(championData).find(champ => champ.key == key);
           return {
@@ -123,65 +125,103 @@ export default {
   color: white;
   overflow-y: auto;
   border-radius: 10px;
+  padding: 10px;
 }
 
 .search-bar {
   box-sizing: border-box;
-  width: 230px;
+  margin: 0;
+  width: 100%;
   height: 40px;
-  margin: 10px;
+  margin-bottom: 10px;
   padding: 10px;
   font-size: 14px;
-  border-radius: 10px; /* 검색창의 border-radius 수정 */
+  border-radius: 10px;
   border: 1px solid #ccc;
 }
 
-.champion-table-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  font-weight: bold;
+.champion-table {
+  width: 100%;
 }
 
-.champion-item {
+.champion-table-header,
+.champion-row {
   display: flex;
   align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-.champion-item:hover {
+.champion-table-header {
+  font-weight: bold;
+  border-bottom: 1px solid #a6a6a6;
+  font-size: 12px;
+  text-align: center;
+}
+
+.champion-row:hover {
   background-color: #34495e;
 }
 
-.champion-item img {
+.champion-rank,
+.header-rank,
+.champion-score,
+.header-score {
+  width: 50px;
+  text-align: center;
+}
+
+.header-score {
+  margin-left: 10px;
+}
+
+.header-name, .header-tier {
+  text-align: center;
+}
+
+.champion-icon,
+.header-icon {
+  font-size: 11px;
+  width: 30px;
+  text-align: center;
+}
+
+.champion-icon img {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  margin-right: 10px;
 }
 
-.champion-name {
+.champion-name,
+.header-name {
   flex: 1;
+  text-align: center;
+  font-size: 14px;
 }
 
 .champion-name.long-name {
-  font-size: 12px; /* 글자가 5자 이상일 때 폰트 크기를 줄임 */
+  font-size: 12px;
 }
 
-.champion-score {
-  width: 60px;
-  margin-right: 30px;
+.champion-tier-wrapper {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  background-color: #202c3a; /* 티어 열 배경 어둡게 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.champion-tier {
+.champion-tier,
+.header-tier {
   width: 24px;
   height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 3px;
+  line-height: 24px;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.header-tier {
+  margin-left: 85px;
 }
 
 .tier-1 {
@@ -189,22 +229,22 @@ export default {
 }
 
 .tier-2 {
-  background-color: #00a2a5; /* 청록색 */
+  background-color: #00a2a5;
 }
 
 .tier-3 {
-  background-color: #c37f00; /* 주황색 */
+  background-color: #c37f00;
 }
 
 .tier-4 {
-  background-color: #a6a6a6; /* 연회색 */
+  background-color: #a6a6a6;
 }
 
 .tier-5 {
-  background-color: #ae9473; /* 연갈색 */
+  background-color: #ae9473;
 }
 
-.main-content2 {
+.m-content {
   flex: 1;
   padding: 20px;
   margin: 0;

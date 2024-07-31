@@ -18,10 +18,18 @@
       </div>
     </transition-group>
     <div class="search-bar-container">
-      <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
+      <input 
+        type="text" 
+        v-model="searchQuery" 
+        @input="filterChampions" 
+        @keyup.enter.exact="selectFirstChampion" 
+        @keyup.shift.enter.exact="fixedFirstChampion" 
+        placeholder="챔피언 검색" 
+        class="search-bar"
+      >
       <div class="action-buttons">
         <div class="action-button info" @mouseover="showTooltip = true" @mouseleave="showTooltip = false">?</div>
-        <div class="tooltip" v-if="showTooltip">챔피언을 선택하고, 고정하려면 우클릭하세요. 고정된 챔피언은 조합 결과에 필수 반영됩니다.</div>
+        <div class="tooltip" v-if="showTooltip">챔피언을 선택하고, 고정하려면 우클릭하세요. 고정된 챔피언은 조합 결과에 필수 반영됩니다.<p>챔피언을 검색하고 엔터 키로 선택하며, 쉬프트+엔터 키로 고정합니다.</p></div>
       </div>
     </div>
     <div class="champion-list-container">
@@ -30,7 +38,7 @@
           v-for="(champion, index) in filteredChampions" 
           :key="index" 
           class="champion" 
-          @click="toggleChampion(champion)"
+          @click="selectChampionFromList(champion)"
           @contextmenu.prevent="toggleFixedChampion(champion)"
         >
           <img 
@@ -54,18 +62,20 @@
             <span>승률</span>
             <span class="win-prob" :class="winProbColor">{{ (optimalCombination.win_prob * 100).toFixed(2) }}%</span>
           </div>
-          <div class="detail" @mouseover="showTooltip2 = true" @mouseleave="showTooltip2 = false">
+          <div class="detail">
             <span>조합 점수</span>
             <span class="score">{{ optimalCombination.score }}</span>
+            <div class="action-button small-info" @mouseover="showTooltip2 = true" @mouseleave="showTooltip2 = false">?</div>
           </div>
           <div class="tooltip second" v-if="showTooltip2">점수가 높을수록 조합의 딜 포텐셜이 높습니다.</div>
           <div class="detail">
-            <span>티어</span>
+            <span>랭크</span>
             <span class="tier">{{ tier }}</span>
           </div>
         </div>
-        <div class="main-champion" @mouseover="showTooltip3 = true" @mouseleave="showTooltip3 = false">
+        <div class="main-champion">
           <img :src="getChampionImage(optimalCombination.main_champ)" alt="main champion" class="circle-img main">
+          <div class="action-button small-info" @mouseover="showTooltip3 = true" @mouseleave="showTooltip3 = false">?</div>
         </div>
         <div class="tooltip third" v-if="showTooltip3">이 조합에 없어선 안되는 핵심 챔피언입니다.</div>
       </div>
@@ -119,7 +129,8 @@ export default {
       showTooltip: false, // 툴팁 상태
       showTooltip2: false,
       showTooltip3: false,
-      copySuccess: false // 복사 성공 메시지 상태
+      copySuccess: false, // 복사 성공 메시지 상태
+      filteredChampionsCache: [] // 추가된 부분
     };
   },
   computed: {
@@ -157,6 +168,26 @@ export default {
     }
   },
   methods: {
+    filterChampions() {
+      // This will trigger a re-computation of filteredChampions
+      this.filteredChampions = this.champions.filter(champion => 
+        champion.englishName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        champion.koreanName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        getInitials(champion.koreanName).includes(this.searchQuery.toLowerCase())
+      );
+    },
+    selectFirstChampion() {
+      if (this.filteredChampions.length > 0) {
+        this.toggleChampion(this.filteredChampions[0]);
+        this.searchQuery = '';
+      }
+    },
+    fixedFirstChampion() {
+      if (this.filteredChampions.length > 0) {
+        this.toggleFixedChampion(this.filteredChampions[0]);
+        this.searchQuery = '';
+      }
+    },
     isSelected(champion) {
       return this.selectedChampions.includes(champion);
     },
@@ -181,6 +212,10 @@ export default {
           this.scrollToErrorMessage();
         }
       }
+    },
+    selectChampionFromList(champion) {
+      this.toggleChampion(champion);
+      this.searchQuery = ''; // 검색어 초기화
     },
     toggleFixedChampion(champion) {
       if (this.fixedChampions.length >= 4 && !this.isFixed(champion)) {
@@ -461,7 +496,7 @@ export default {
   background-color: #364156;
   color: white;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 50%;
   font-size: 18px; /* 폰트 크기 조정 */
 }
 
@@ -530,7 +565,7 @@ export default {
 }
 
 .copy-button {
-  font-family: 'Pretendard-Regular';
+  font-family: 'Cafe24Moyamoya-Regular-v1.0';
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
@@ -614,6 +649,23 @@ export default {
   margin-bottom: 10px;
   font-size: 16px;
   font-weight: bold;
+}
+
+.action-button.small-info {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  right: 0; /* 위치 조정 */
+  top: -25px; /* 조합 점수와 핵심 챔피언 버튼 위로 이동 */
+}
+
+.detail {
+  position: relative; /* 조합 점수 툴팁 위치 조정 */
+}
+
+.main-champion {
+  position: relative; /* 핵심 챔피언 툴팁 위치 조정 */
 }
 
 .optimal-combination .optimal-champion-list .champion img {
