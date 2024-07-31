@@ -1,6 +1,6 @@
 <template>
   <div>
-    <transition-group name="list" tag="div" class="selected-champions" ref="selectedChampionsContainer" @leave="onLeave">
+    <transition-group name="list" tag="div" class="selected-champions" @leave="onLeave">
       <div 
         v-for="(champion, index) in selectedChampions" 
         :key="champion.key" 
@@ -21,7 +21,6 @@
       <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
       <div class="action-buttons">
         <div class="action-button info" @mouseover="showTooltip = true" @mouseleave="showTooltip = false">?</div>
-        <div class="action-button reset" @click="resetChampions">X</div>
         <div class="tooltip" v-if="showTooltip">챔피언을 선택하고, 고정하려면 우클릭하세요. 고정된 챔피언은 조합 결과에 필수 반영됩니다.</div>
       </div>
     </div>
@@ -46,15 +45,32 @@
     <button @click="submitChampions" class="submit-button">최적의 조합 찾기</button>
     <div v-if="errorMessage" ref="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div v-if="optimalCombination.champions.length > 0" ref="optimalCombination" class="optimal-combination">
-      <p class="win-prob" :class="winProbColor">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
-      <p class="score">조합 점수: {{ optimalCombination.score }}</p>
-      <p class="tier">티어: {{ tier }}</p>
       <div class="optimal-champion-list">
         <div v-for="(championId, index) in optimalCombination.champions" :key="index" class="champion">
-          <img :src="getChampionImage(championId)" alt="champion" class="circle-img" :class="{ main: isMainChampion(championId) }">
+          <img :src="getChampionImage(championId)" alt="champion" class="circle-img">
+        </div>
+        <div class="combination-details">
+          <div class="detail">
+            <span>승률</span>
+            <span class="win-prob" :class="winProbColor">{{ (optimalCombination.win_prob * 100).toFixed(2) }}%</span>
+          </div>
+          <div class="detail">
+            <span>조합 점수</span>
+            <span class="score">{{ optimalCombination.score }}</span>
+          </div>
+          <div class="detail">
+            <span>티어</span>
+            <span class="tier">{{ tier }}</span>
+          </div>
+        </div>
+        <div class="main-champion">
+          <img :src="getChampionImage(optimalCombination.main_champ)" alt="main champion" class="circle-img main">
         </div>
       </div>
-      <button @click="copyToClipboard" class="copy-button">복사</button>
+      <div class="button-container">
+        <button @click="copyToClipboard" class="copy-button">복사</button>
+        <button @click="[resetChampions(), resetOptimal(), scrollToselection()]" class="reset-button">리셋</button>
+      </div>
       <div v-if="copySuccess" class="copy-success">클립보드에 복사되었습니다</div>
     </div>
   </div>
@@ -190,6 +206,14 @@ export default {
       this.selectedChampions = [];
       this.fixedChampions = [];
     },
+    resetOptimal() {
+      this.optimalCombination = {
+        champions: [],
+        win_prob: 0,
+        main_champ: null,
+        score: 0
+      };
+    },
     onLeave(el, done) {
       const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = el;
       el.style.position = 'absolute';
@@ -230,6 +254,14 @@ export default {
         this.errorMessage = '최적의 조합을 찾으려면 5에서 12개의 챔피언을 선택해야 합니다.';
         this.scrollToErrorMessage();
       }
+    },
+    scrollToselection() {
+      this.$nextTick(() => {
+        const element = document.querySelector(".search-bar-container");
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: "end" });
+        }
+      });
     },
     scrollToOptimalCombination() {
       this.$nextTick(() => {
@@ -359,7 +391,7 @@ export default {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  border: 2px solid #F7F4F3;
+  border: 2px solid #364156;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -388,6 +420,10 @@ export default {
 
 .circle-img.fixed {
   border: 2px solid #cf4529; /* 고정된 챔피언의 테두리 색상 */
+}
+
+.circle-img.main {
+  border: 2px solid #469CF8; /* 고정된 챔피언의 테두리 색상 */
 }
 
 .search-bar-container {
@@ -427,10 +463,6 @@ export default {
 
 .action-button.info {
   position: relative;
-}
-
-.action-button.reset {
-  background-color: #cf4529;
 }
 
 .tooltip {
@@ -524,19 +556,81 @@ export default {
 
 .optimal-combination .optimal-champion-list {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.optimal-combination .optimal-champion-list .champion {
+  margin: 0 10px;
+}
+
+.optimal-combination .optimal-champion-list .combination-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.combination-details .detail {
+  margin: 0 20px;
+  text-align: center;
+}
+
+.detail span {
+  display: block;
+}
+
+.detail .win-prob,
+.detail .score,
+.detail .tier {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.optimal-combination .optimal-champion-list .main-champion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.main-champion span {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .optimal-combination .optimal-champion-list .champion img {
   border: 2px solid #9e9e9e;
+  border-radius: 50%;
 }
 
-.optimal-combination .optimal-champion-list .champion img.main {
+.optimal-combination .optimal-champion-list .main img {
   border: 2px solid transparent;
   background-image: linear-gradient(#fff, #fff), linear-gradient(270deg, #62D6C0, #5BC7CE, #54B9DC, #4DAAE9, #469CF8);
   background-origin: border-box;
   background-clip: content-box, border-box;
+  border-radius: 50%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.copy-button,
+.reset-button {
+  font-family: 'Cafe24Moyamoya-Regular-v1.0';
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 0 10px;
+  background: #62D6C0;
+  color: #F7F4F3;
+  border: none;
+  cursor: pointer;
 }
 
 .error-message {

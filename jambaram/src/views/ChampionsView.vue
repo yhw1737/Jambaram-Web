@@ -2,9 +2,16 @@
   <div class="champions-view">
     <div class="sidebar">
       <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
+      <div class="champion-table-header">
+        <span>초상화</span>
+        <span>이름</span>
+        <span>AI-score</span>
+        <span>티어</span>
+      </div>
       <div v-for="champion in filteredChampions" :key="champion.id" class="champion-item" @click="selectChampion(champion)">
         <img :src="champion.image" alt="champion">
         <span class="champion-name">{{ champion.koreanName }}</span>
+        <span class="champion-score">{{ Math.round(champion.importance * 100) }}</span>
         <span class="champion-tier" :class="`tier-${champion.tier}`">{{ champion.tier }}</span>
       </div>
     </div>
@@ -78,9 +85,10 @@ export default {
             englishName: champion?.id || `Champion ${key}`,
             koreanName: champion?.name || `Champion ${key}`,
             image: champion ? `http://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${champion.image.full}` : '',
+            importance,
             tier: this.getTier(importance)
           };
-        }).sort((a, b) => a.tier - b.tier);
+        }).sort((a, b) => b.importance - a.importance);
 
         this.champions = champions;
       } catch (error) {
@@ -128,6 +136,13 @@ export default {
   border: 1px solid #ccc;
 }
 
+.champion-table-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  font-weight: bold;
+}
+
 .champion-item {
   display: flex;
   align-items: center;
@@ -148,8 +163,14 @@ export default {
 }
 
 .champion-name {
-  display: flex;
-  flex-grow: 1;
+  flex: 1;
+  text-align: left;
+}
+
+.champion-score {
+  width: 60px;
+  text-align: left;
+  margin-right: 10px;
 }
 
 .champion-tier {
