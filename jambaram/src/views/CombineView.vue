@@ -47,9 +47,11 @@
     <div v-if="errorMessage" ref="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div v-if="optimalCombination.champions.length > 0" ref="optimalCombination" class="optimal-combination">
       <p class="win-prob" :class="winProbColor">승률: {{ (optimalCombination.win_prob * 100).toFixed(2) }}%</p>
+      <p class="score">조합 점수: {{ optimalCombination.score }}</p>
+      <p class="tier">티어: {{ tier }}</p>
       <div class="optimal-champion-list">
         <div v-for="(championId, index) in optimalCombination.champions" :key="index" class="champion">
-          <img :src="getChampionImage(championId)" alt="champion" class="circle-img" :class="{ fixed: isFixedById(championId) }">
+          <img :src="getChampionImage(championId)" alt="champion" class="circle-img" :class="{ main: isMainChampion(championId) }">
         </div>
       </div>
       <button @click="copyToClipboard" class="copy-button">복사</button>
@@ -89,7 +91,9 @@ export default {
       fixedChampions: [], // 고정된 챔피언 목록
       optimalCombination: {
         champions: [],
-        win_prob: 0
+        win_prob: 0,
+        main_champ: null,
+        score: 0
       },
       loading: true,
       containerWidth: 0,
@@ -118,6 +122,18 @@ export default {
         champion.koreanName.toLowerCase().includes(query) ||
         getInitials(champion.koreanName).includes(query)
       );
+    },
+    tier() {
+      const winProb = this.optimalCombination.win_prob * 100;
+      if (winProb > 65) {
+        return 'S';
+      } else if (winProb > 55) {
+        return 'A';
+      } else if (winProb > 45) {
+        return 'B';
+      } else {
+        return 'C';
+      }
     }
   },
   methods: {
@@ -129,6 +145,9 @@ export default {
     },
     isFixedById(championId) {
       return this.fixedChampions.some(champion => parseInt(champion.key) === championId);
+    },
+    isMainChampion(championId) {
+      return championId == this.optimalCombination.main_champ;
     },
     toggleChampion(champion) {
       const index = this.selectedChampions.indexOf(champion);
@@ -198,6 +217,8 @@ export default {
           });
           this.optimalCombination.champions = response.data.champions;
           this.optimalCombination.win_prob = response.data.win_prob;
+          this.optimalCombination.main_champ = response.data.main_champ;
+          this.optimalCombination.score = response.data.score;
           this.errorMessage = '';
           this.scrollToOptimalCombination();
         } catch (error) {
@@ -378,6 +399,7 @@ export default {
 }
 
 .search-bar {
+  margin: 0;
   width: 50%;
   padding: 10px;
   font-size: 16px;
@@ -506,12 +528,15 @@ export default {
   justify-content: center;
 }
 
-.optimal-combination .optimal-champion-list .champion img.fixed {
-  border: 2px solid #cf4529;
+.optimal-combination .optimal-champion-list .champion img {
+  border: 2px solid #9e9e9e;
 }
 
-.optimal-combination .optimal-champion-list .champion img {
-  border: 2px solid #F7F4F3;
+.optimal-combination .optimal-champion-list .champion img.main {
+  border: 2px solid transparent;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(270deg, #62D6C0, #5BC7CE, #54B9DC, #4DAAE9, #469CF8);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
 }
 
 .error-message {

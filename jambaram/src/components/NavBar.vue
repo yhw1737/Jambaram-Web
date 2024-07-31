@@ -8,6 +8,7 @@
         <div class="navbar-center" v-if="!isMobile">
           <router-link to="/" class="menu-item" exact>홈</router-link>
           <router-link to="/combine" class="menu-item" exact>조합</router-link>
+          <router-link to="/champion" class="menu-item" exact>챔피언</router-link>
         </div>
       </div>
       <div class="navbar-right" v-if="!isMobile">

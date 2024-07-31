@@ -1,6 +1,9 @@
 <template>
   <div class="home-container">
     <div class="search-bar-container">
+      <div class="logo">
+        <img src="../assets/image.png">
+      </div>
       <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="summoner#KR1" class="search-bar">
       <img src="../assets/search.png" alt="search icon" class="search-icon" @click="searchSummoner">
     </div>
@@ -40,10 +43,11 @@ export default {
 
 .search-bar-container {
   width: 100%;
-  margin-top: 400px;
+  margin-top: 20vh;
 }
 
 .search-bar {
+  margin-top: 10vh;
   height: 20px;
   width: 60%;
   padding: 10px 20px;

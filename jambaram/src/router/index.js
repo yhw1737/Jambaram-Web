@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import CombineView from '../views/CombineView.vue';
 import NotFound from '../views/NotFound.vue';
 import SummonerView from '../views/SummonerView.vue';
+import ChampionsView from '../views/ChampionsView.vue';
 
 const routes = [
   {
@@ -14,6 +15,11 @@ const routes = [
     path: '/combine',
     name: 'Combinations',
     component: CombineView
+  },
+  {
+    path: '/champion',
+    name: 'Champions',
+    component: ChampionsView
   },
   {
     path: '/search/:summonerName',
