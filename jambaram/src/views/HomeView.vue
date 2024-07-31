@@ -1,9 +1,9 @@
 <template>
   <div class="home-container">
     <div class="search-bar-container">
-      <div class="logo">
+      <router-link to="/" class="logo" v-if="!isMobile">
         <img src="../assets/image.png">
-      </div>
+      </router-link>
       <input type="text" v-model="summonerName" @keyup.enter="searchSummoner" placeholder="summoner#KR1" class="search-bar">
       <img src="../assets/search.png" alt="search icon" class="search-icon" @click="searchSummoner">
     </div>
@@ -31,6 +31,10 @@ export default {
 </script>
 
 <style>
+.logo img {
+  width: 60%;
+}
+
 .home-container {
   position: relative;
   width: 100%;
@@ -42,12 +46,15 @@ export default {
 }
 
 .search-bar-container {
+  align-items: center;
+  justify-content: center;
   width: 100%;
   margin-top: 20vh;
 }
 
 .search-bar {
   margin-top: 10vh;
+  margin-right: 20px;
   height: 20px;
   width: 60%;
   padding: 10px 20px;

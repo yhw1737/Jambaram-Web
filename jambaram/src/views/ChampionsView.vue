@@ -3,14 +3,14 @@
     <div class="sidebar">
       <input type="text" v-model="searchQuery" placeholder="챔피언 검색" class="search-bar">
       <div class="champion-table-header">
-        <span>초상화</span>
+        <span>아이콘</span>
         <span>이름</span>
         <span>AI-score</span>
         <span>티어</span>
       </div>
       <div v-for="champion in filteredChampions" :key="champion.id" class="champion-item" @click="selectChampion(champion)">
         <img :src="champion.image" alt="champion">
-        <span class="champion-name">{{ champion.koreanName }}</span>
+        <span class="champion-name" :class="{ 'long-name': champion.koreanName.length > 5 }">{{ champion.koreanName }}</span>
         <span class="champion-score">{{ Math.round(champion.importance * 100) }}</span>
         <span class="champion-tier" :class="`tier-${champion.tier}`">{{ champion.tier }}</span>
       </div>
@@ -164,13 +164,15 @@ export default {
 
 .champion-name {
   flex: 1;
-  text-align: left;
+}
+
+.champion-name.long-name {
+  font-size: 12px; /* 글자가 5자 이상일 때 폰트 크기를 줄임 */
 }
 
 .champion-score {
   width: 60px;
-  text-align: left;
-  margin-right: 10px;
+  margin-right: 30px;
 }
 
 .champion-tier {

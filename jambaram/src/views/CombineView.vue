@@ -54,18 +54,20 @@
             <span>승률</span>
             <span class="win-prob" :class="winProbColor">{{ (optimalCombination.win_prob * 100).toFixed(2) }}%</span>
           </div>
-          <div class="detail">
+          <div class="detail" @mouseover="showTooltip2 = true" @mouseleave="showTooltip2 = false">
             <span>조합 점수</span>
             <span class="score">{{ optimalCombination.score }}</span>
           </div>
+          <div class="tooltip second" v-if="showTooltip2">점수가 높을수록 조합의 딜 포텐셜이 높습니다.</div>
           <div class="detail">
             <span>티어</span>
             <span class="tier">{{ tier }}</span>
           </div>
         </div>
-        <div class="main-champion">
+        <div class="main-champion" @mouseover="showTooltip3 = true" @mouseleave="showTooltip3 = false">
           <img :src="getChampionImage(optimalCombination.main_champ)" alt="main champion" class="circle-img main">
         </div>
+        <div class="tooltip third" v-if="showTooltip3">이 조합에 없어선 안되는 핵심 챔피언입니다.</div>
       </div>
       <div class="button-container">
         <button @click="copyToClipboard" class="copy-button">복사</button>
@@ -115,6 +117,8 @@ export default {
       containerWidth: 0,
       errorMessage: '',
       showTooltip: false, // 툴팁 상태
+      showTooltip2: false,
+      showTooltip3: false,
       copySuccess: false // 복사 성공 메시지 상태
     };
   },
@@ -477,6 +481,15 @@ export default {
   text-align: center;
 }
 
+.tooltip.second {
+  top: 600px;
+  right: 20px;
+}
+.tooltip.third {
+  top: 600px;
+  right: 20px;
+}
+
 .champion-list-container {
   margin-left: auto;
   margin-right: auto;
@@ -548,17 +561,19 @@ export default {
 }
 
 .optimal-combination {
-  margin-top: 20px;
-  margin-bottom: 120px;
+  margin-top: 50px;
+  margin-bottom: 50px;
   text-align: center;
   color: #F7F4F3; /* 조합 결과 텍스트 색상 변경 */
 }
 
 .optimal-combination .optimal-champion-list {
+  height: 120px;
+  border: 2px solid #212D40;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .optimal-combination .optimal-champion-list .champion {
@@ -618,7 +633,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 40px;
 }
 
 .copy-button,
@@ -627,10 +642,14 @@ export default {
   padding: 10px 20px;
   font-size: 16px;
   margin: 0 10px;
-  background: #62D6C0;
+  background: #212D40;
   color: #F7F4F3;
   border: none;
   cursor: pointer;
+}
+
+.reset-button {
+  background: #cf4529;
 }
 
 .error-message {
