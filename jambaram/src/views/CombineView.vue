@@ -11,7 +11,7 @@
       >
         <img 
           v-if="champion" 
-          :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" 
+          :src="`https://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" 
           alt="champion" 
           class="circle-img" 
         >
@@ -42,7 +42,7 @@
           @contextmenu.prevent="toggleFixedChampion(champion)"
         >
           <img 
-            :src="`http://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" 
+            :src="`https://ddragon.leagueoflegends.com/cdn/${gameversion}/img/champion/${champion.image.full}`" 
             alt="champion" 
             class="circle-img" 
             :class="{ selected: isSelected(champion), fixed: isFixed(champion) }"
@@ -274,7 +274,7 @@ export default {
       }
       if (this.selectedChampions.length >= 5 && this.selectedChampions.length <= 12) {
         try {
-          const response = await axios.post('http://jambaram.xyz:10090/api/model/combination', {
+          const response = await axios.post('https://jambaram.xyz/api/model/combination', {
             champion_list: this.selectedChampions.map(champion => parseInt(champion.key)),
             fixed_list: this.fixedChampions.map(champion => parseInt(champion.key))
           });
@@ -320,7 +320,7 @@ export default {
     },
     getChampionImage(id) {
       const champion = this.champions.find(champion => parseInt(champion.key) === id);
-      return champion ? `http://ddragon.leagueoflegends.com/cdn/${this.gameversion}/img/champion/${champion.image.full}` : '';
+      return champion ? `https://ddragon.leagueoflegends.com/cdn/${this.gameversion}/img/champion/${champion.image.full}` : '';
     },
     copyToClipboard() {
       const championNames = this.optimalCombination.champions.map(id => this.getChampionName(id)).join(', ');
@@ -355,10 +355,10 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.14.1/data/ko_KR/champion.json');
+      const response = await axios.get('https://ddragon.leagueoflegends.com/cdn/14.14.1/data/ko_KR/champion.json');
       const koreanData = response.data.data;
 
-      const englishResponse = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.14.1/data/en_US/champion.json');
+      const englishResponse = await axios.get('https://ddragon.leagueoflegends.com/cdn/14.14.1/data/en_US/champion.json');
       const englishData = englishResponse.data.data;
 
       this.champions = Object.values(koreanData).map(champion => ({

@@ -74,10 +74,10 @@ export default {
   methods: {
     async fetchChampionData() {
       try {
-        const response = await axios.get('http://jambaram.xyz:10090/api/model/champion/feature_importance');
+        const response = await axios.get('https://jambaram.xyz/api/model/champion/feature_importance');
         const sortedFeatures = response.data.sorted_feature_importance_dict;
 
-        const championDataResponse = await axios.get('http://ddragon.leagueoflegends.com/cdn/14.14.1/data/ko_KR/champion.json');
+        const championDataResponse = await axios.get('https://ddragon.leagueoflegends.com/cdn/14.14.1/data/ko_KR/champion.json');
         const championData = championDataResponse.data.data;
 
         const champions = Object.entries(sortedFeatures).map(([key, importance]) => {
@@ -86,7 +86,7 @@ export default {
             id: key,
             englishName: champion?.id || `Champion ${key}`,
             koreanName: champion?.name || `Champion ${key}`,
-            image: champion ? `http://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${champion.image.full}` : '',
+            image: champion ? `https://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${champion.image.full}` : '',
             importance,
             tier: this.getTier(importance)
           };
