@@ -69,15 +69,17 @@
           </div>
           <div class="tooltip second" v-if="showTooltip2">점수가 높을수록 조합의 딜 포텐셜이 높습니다.</div>
           <div class="detail">
+            <div class="action-button small-info three" @mouseover="showTooltip4 = true" @mouseleave="showTooltip4 = false">?</div>
             <span>랭크</span>
             <span class="tier">{{ tier }}</span>
           </div>
+          <div class="tooltip second" v-if="showTooltip4">승률과 조합 점수로 책정된 등급입니다.</div>
         </div>
         <div class="main-champion">
           <div class="action-button small-info two" @mouseover="showTooltip3 = true" @mouseleave="showTooltip3 = false">?</div>
           <img :src="getChampionImage(optimalCombination.main_champ)" alt="main champion" class="circle-img main">
         </div>
-        <div class="tooltip third" v-if="showTooltip3">이 조합에 없어선 안되는 핵심 챔피언입니다.</div>
+        <div class="tooltip second" v-if="showTooltip3">이 조합에 없어선 안되는 핵심 챔피언입니다.</div>
       </div>
       <div class="button-container">
         <button @click="copyToClipboard" class="copy-button">복사</button>
@@ -129,6 +131,7 @@ export default {
       showTooltip: false, // 툴팁 상태
       showTooltip2: false,
       showTooltip3: false,
+      showTooltip4: false,
       copySuccess: false, // 복사 성공 메시지 상태
       filteredChampionsCache: [] // 추가된 부분
     };
@@ -523,10 +526,6 @@ export default {
   top: 600px;
   right: 20px;
 }
-.tooltip.third {
-  top: 600px;
-  right: 20px;
-}
 
 .champion-list-container {
   margin-left: auto;
@@ -663,6 +662,10 @@ export default {
 .action-button.small-info.two {
   top: -20px;
   right: -10px;
+}
+
+.action-button.small-info.three {
+  top: -25px;
 }
 
 .detail {
