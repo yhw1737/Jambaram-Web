@@ -661,8 +661,8 @@ export default {
 }
 
 .action-button.small-info.two {
-  top: -30px;
-  right: 28px;
+  top: -20px;
+  right: -10px;
 }
 
 .detail {
