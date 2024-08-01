@@ -63,9 +63,9 @@
             <span class="win-prob" :class="winProbColor">{{ (optimalCombination.win_prob * 100).toFixed(2) }}%</span>
           </div>
           <div class="detail">
+            <div class="action-button small-info one" @mouseover="showTooltip2 = true" @mouseleave="showTooltip2 = false">?</div>
             <span>조합 점수</span>
-            <span class="score">{{ optimalCombination.score }}</span>
-            <div class="action-button small-info" @mouseover="showTooltip2 = true" @mouseleave="showTooltip2 = false">?</div>
+            <span class="score">{{ Math.round(optimalCombination.score) }}</span>
           </div>
           <div class="tooltip second" v-if="showTooltip2">점수가 높을수록 조합의 딜 포텐셜이 높습니다.</div>
           <div class="detail">
@@ -74,8 +74,8 @@
           </div>
         </div>
         <div class="main-champion">
+          <div class="action-button small-info two" @mouseover="showTooltip3 = true" @mouseleave="showTooltip3 = false">?</div>
           <img :src="getChampionImage(optimalCombination.main_champ)" alt="main champion" class="circle-img main">
-          <div class="action-button small-info" @mouseover="showTooltip3 = true" @mouseleave="showTooltip3 = false">?</div>
         </div>
         <div class="tooltip third" v-if="showTooltip3">이 조합에 없어선 안되는 핵심 챔피언입니다.</div>
       </div>
@@ -177,13 +177,13 @@ export default {
       );
     },
     selectFirstChampion() {
-      if (this.filteredChampions.length > 0) {
+      if (this.filteredChampions.length > 0 && this.searchQuery != '') {
         this.toggleChampion(this.filteredChampions[0]);
         this.searchQuery = '';
       }
     },
     fixedFirstChampion() {
-      if (this.filteredChampions.length > 0) {
+      if (this.filteredChampions.length > 0 && this.searchQuery != '') {
         this.toggleFixedChampion(this.filteredChampions[0]);
         this.searchQuery = '';
       }
@@ -462,7 +462,10 @@ export default {
 }
 
 .circle-img.main {
-  border: 2px solid #469CF8; /* 고정된 챔피언의 테두리 색상 */
+  border: 2px solid transparent;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(270deg, #f5b1b0, #aa78d7, #4a90e2, #a0e8af);
+  background-clip: content-box, border-box;
+  background-origin: border-box;
 }
 
 .search-bar-container {
@@ -642,13 +645,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 20px;
-}
-
-.main-champion span {
-  margin-bottom: 10px;
-  font-size: 16px;
-  font-weight: bold;
+  margin-left: 0px;
 }
 
 .action-button.small-info {
@@ -656,8 +653,16 @@ export default {
   width: 20px;
   height: 20px;
   font-size: 12px;
-  right: 0; /* 위치 조정 */
-  top: -25px; /* 조합 점수와 핵심 챔피언 버튼 위로 이동 */
+}
+
+.action-button.small-info.one {
+  top: -25px;
+  left: 15px;
+}
+
+.action-button.small-info.two {
+  top: -25px;
+  right: 28px;
 }
 
 .detail {
