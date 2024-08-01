@@ -126,7 +126,7 @@ export default {
   margin: 0;
   height: 20px;
   padding: 10px 20px;
-  font-family: 'NanumBarunGothic';
+  font-family: 'Pretendard-regular';
   font-size: 12px;
   font-weight: lighter;
   border-radius: 20px;
@@ -141,8 +141,7 @@ export default {
 .search-icon {
   width: 11px;
   height: 10px;
-  margin-left: -30px; /* 검색창 오른쪽에 배치 */  
-  cursor: pointer;
+  margin-left: -30px;
 }
 
 .item.E {
