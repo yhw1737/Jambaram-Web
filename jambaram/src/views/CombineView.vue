@@ -29,7 +29,7 @@
       >
       <div class="action-buttons">
         <div class="action-button info" @mouseover="showTooltip = true" @mouseleave="showTooltip = false">?</div>
-        <div class="action-button count" @click="resetChampions"><span>{{ selectedChampions.length }}</span></div>
+        <div class="action-button count" :class="{ 'full': selectedChampions.length === 12 }" @click="resetChampions"><span>{{ selectedChampions.length }}</span></div>
         <div class="tooltip" v-if="showTooltip">챔피언을 선택하고, 고정하려면 우클릭하세요. 고정된 챔피언은 조합 결과에 필수 반영됩니다.<br>챔피언을 검색하고 엔터 키로 선택하며, 쉬프트+엔터 키로 고정합니다.</div>
       </div>
     </div>
@@ -136,7 +136,7 @@ export default {
       showTooltip4: false,
       copySuccess: false, // 복사 성공 메시지 상태
       copyFail: false,
-      filteredChampionsCache: [] // 추가된 부분
+      filteredChampionsCache: [],
     };
   },
   computed: {
@@ -491,10 +491,17 @@ export default {
 
 .search-bar {
   margin: 0;
+  border: none;
+  border-radius: 20px;
   width: 50%;
   padding: 10px;
   font-size: 16px;
 }
+
+.search-bar:focus {
+  outline: none;
+}
+
 
 .action-buttons {
   display: flex;
@@ -524,6 +531,10 @@ export default {
   border-left: 18px solid transparent;
   border-right: 18px solid transparent;
   border-radius: 0;
+}
+
+.action-button.count.full {
+  border-top: calc( 18px * 1.732 ) solid #8f3838
 }
 
 .action-button.count span {

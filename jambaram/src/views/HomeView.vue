@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="value">
-          <span>{{ currentWinData.value }}%</span>
+          <span>{{ Math.round(currentWinData.value * 10000) / 100 }}%</span>
         </div>
       </div>
       <div class="combination-section">
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="value">
-          <span>{{ currentScoreData.value }}</span>
+          <span>{{ Math.round(currentScoreData.value * 100) / 100 }}</span>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@ export default {
       isWinToday: true,
       isScoreToday: true,
       combinations: {
-        win_today: { champions: [1,2,3,33,888], value: 50, api: 'hsttps://jambaram.xyz/api/model/stats/best_win_today' },
+        win_today: { champions: [-1], value: 0, api: 'hsttps://jambaram.xyz/api/model/stats/best_win_today' },
         win_all: { champions: [-1], value: 0, api: 'https://jambaram.xyz/api/model/stats/best_win_all' },
         score_today: { champions: [-1], value: 0, api: 'https://jambaram.xyz/api/model/stats/best_score_today' },
         score_all: { champions: [-1], value: 0, api: 'https://jambaram.xyz/api/model/stats/best_score_all' }
@@ -160,7 +160,7 @@ export default {
   width: 60%;
   padding: 10px 20px;
   font-family: 'Pretendard-regular';
-  font-size: 12px;
+  font-size: 14px;
   font-weight: lighter;
   border-radius: 20px;
   background-color: #F7F4F3; 
@@ -179,7 +179,7 @@ export default {
 
 .combination-container {
   width: 100%;
-  margin-top: 30px;
+  margin-top: 50px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
