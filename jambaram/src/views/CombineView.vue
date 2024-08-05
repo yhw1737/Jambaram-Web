@@ -571,7 +571,7 @@ export default {
 
 .champion {
   border-radius: 50%;
-  margin: 20px;
+  margin: 10px;
 }
 
 .champion img {
