@@ -29,7 +29,8 @@
       >
       <div class="action-buttons">
         <div class="action-button info" @mouseover="showTooltip = true" @mouseleave="showTooltip = false">?</div>
-        <div class="tooltip" v-if="showTooltip">챔피언을 선택하고, 고정하려면 우클릭하세요. 고정된 챔피언은 조합 결과에 필수 반영됩니다.<p>챔피언을 검색하고 엔터 키로 선택하며, 쉬프트+엔터 키로 고정합니다.</p></div>
+        <div class="action-button count" @click="resetChampions"><span>{{ selectedChampions.length }}</span></div>
+        <div class="tooltip" v-if="showTooltip">챔피언을 선택하고, 고정하려면 우클릭하세요. 고정된 챔피언은 조합 결과에 필수 반영됩니다.<br>챔피언을 검색하고 엔터 키로 선택하며, 쉬프트+엔터 키로 고정합니다.</div>
       </div>
     </div>
     <div class="champion-list-container">
@@ -59,7 +60,7 @@
         </div>
         <div class="combination-details">
           <div class="detail">
-            <span>승률</span>
+            <span v-if="!isMobile">승률</span>
             <span class="win-prob" :class="winProbColor">{{ (optimalCombination.win_prob * 100).toFixed(2) }}%</span>
           </div>
           <div class="detail">
@@ -86,6 +87,7 @@
         <button @click="[resetChampions(), resetOptimal(), scrollToselection()]" class="reset-button">리셋</button>
       </div>
       <div v-if="copySuccess" class="copy-success">클립보드에 복사되었습니다</div>
+      <div v-if="copyFail" class="copy-fail">복사에 실패했습니다</div>
     </div>
   </div>
 </template>
@@ -133,6 +135,7 @@ export default {
       showTooltip3: false,
       showTooltip4: false,
       copySuccess: false, // 복사 성공 메시지 상태
+      copyFail: false,
       filteredChampionsCache: [] // 추가된 부분
     };
   },
@@ -327,12 +330,13 @@ export default {
     },
     copyToClipboard() {
       const championNames = this.optimalCombination.champions.map(id => this.getChampionName(id)).join(', ');
+      const winrate = this.optimalCombination.win_prob;
       navigator.clipboard.writeText(championNames).then(() => {
         this.showCopySuccess();
       }).catch(() => {
         // fallback for unsupported environments
         const textArea = document.createElement('textarea');
-        textArea.value = championNames;
+        textArea.value = championNames + winrate;
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
@@ -340,7 +344,7 @@ export default {
           document.execCommand('copy');
           this.showCopySuccess();
         } catch (err) {
-          console.error('Fallback: Oops, unable to copy', err);
+          this.showCopyFail();
         }
         document.body.removeChild(textArea);
       });
@@ -349,6 +353,12 @@ export default {
       this.copySuccess = true;
       setTimeout(() => {
         this.copySuccess = false;
+      }, 3000);
+    },
+    showCopyFail() {
+      this.copyFail = true;
+      setTimeout(() => {
+        this.copyFail = false;
       }, 3000);
     },
     getChampionName(id) {
@@ -506,6 +516,22 @@ export default {
   font-size: 18px; /* 폰트 크기 조정 */
 }
 
+.action-button.count {
+  width: 0px;
+  height: 0px;
+  background-color: transparent;
+  border-top: calc( 18px * 1.732 ) solid #364156;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-radius: 0;
+}
+
+.action-button.count span {
+  position: relative;
+  top: -20px;
+  font-size: 14px;
+}
+
 .action-button.info {
   position: relative;
 }
@@ -541,12 +567,11 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 10px;
 }
 
 .champion {
   border-radius: 50%;
-  margin: 10px;
+  margin: 20px;
 }
 
 .champion img {
@@ -579,13 +604,17 @@ export default {
   margin-top: 10px;
 }
 
-.copy-success {
+.copy-success, .copy-fail {
   font-family: 'Pretendard-Regular';
   color: #62D6C0;
   text-align: center;
   margin-top: 10px;
   animation: fadeOut 3s forwards;
   height: 20px; /* 고정된 높이 설정 */
+}
+
+.copy-fail {
+  color: #FD151B
 }
 
 @keyframes fadeOut {
