@@ -63,7 +63,7 @@ export default {
       isWinToday: true,
       isScoreToday: true,
       combinations: {
-        win_today: { champions: [-1], value: 0, api: 'hsttps://jambaram.xyz/api/model/stats/best_win_today' },
+        win_today: { champions: [-1], value: 0, api: 'https://jambaram.xyz/api/model/stats/best_win_today' },
         win_all: { champions: [-1], value: 0, api: 'https://jambaram.xyz/api/model/stats/best_win_all' },
         score_today: { champions: [-1], value: 0, api: 'https://jambaram.xyz/api/model/stats/best_score_today' },
         score_all: { champions: [-1], value: 0, api: 'https://jambaram.xyz/api/model/stats/best_score_all' }
@@ -151,11 +151,10 @@ export default {
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 20vh;
+  margin-top: 18vh;
 }
 
 .search-bar {
-  margin-top: 10vh;
   height: 20px;
   width: 60%;
   padding: 10px 20px;
@@ -213,23 +212,23 @@ export default {
   align-items: center;
   width: 100px;
   height: 40px;
-  background-color: #3a3a3a;
+  background-color: #535760;
   border-radius: 20px;
   cursor: pointer;
 }
 
 .toggle-circle {
   position: absolute;
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 32px;
   background-color: #ffffff;
-  border-radius: 50%;
+  border-radius: 18px;
   transition: 0.4s;
   left: 4px; /* default to left side */
 }
 
 .toggle-right {
-  left: 60px; /* move to right side */
+  left: 48px; /* move to right side */
 }
 
 .toggle-label {
